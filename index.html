@@ -3,1065 +3,542 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<meta name="theme-color" content="#0B7A7A">
+<meta name="theme-color" content="#FFFFFF">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Garantie Tresor">
+<meta name="description" content="Alle deine Garantien an einem Ort. Beleg scannen, Frist im Blick behalten.">
 <title>Garantie Tresor</title>
 <style>
   :root{
-    --teal:#0B7A7A; --teal-2:#12A3A3; --teal-soft:#E6F4F4;
-    --bg:#F6F8F8; --card:#FFFFFF; --ink:#12201F; --muted:#6B7C7B;
-    --line:#E4EBEA;
-    --green:#1E9E6A; --green-soft:#E4F5EC;
-    --amber:#C98A0E; --amber-soft:#FBF0DC;
-    --red:#D14343; --red-soft:#FBE7E7;
-    --shadow:0 6px 20px rgba(11,64,64,.08);
-    --shadow-lg:0 12px 40px rgba(11,64,64,.16);
-    --r:18px;
+    --accent:#0B7A7A; --accent-2:#0F6E6E; --accent-tint:#E9F2F2;
+    --bg:#F4F6F6; --card:#FFFFFF; --ink:#111A1A; --muted:#69787A; --muted-2:#9AA6A7;
+    --line:#E7ECEC; --line-2:#EEF2F2;
+    --ok:#128A6C; --ok-bg:#E6F4EF;
+    --warn:#B4780B; --warn-bg:#FAF1DC;
+    --bad:#C94F4F; --bad-bg:#F9E9E9;
+    --shadow:0 1px 2px rgba(16,40,40,.04),0 6px 16px rgba(16,40,40,.05);
+    --shadow-lg:0 12px 40px rgba(16,40,40,.14);
+    --r:16px; --r-lg:20px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg); color:var(--ink);
+    background:var(--bg); color:var(--ink); font-size:15px; line-height:1.4;
     -webkit-font-smoothing:antialiased;
-    padding-bottom:calc(88px + env(safe-area-inset-bottom));
+    padding-bottom:calc(84px + env(safe-area-inset-bottom));
   }
-  .safe-top{padding-top:env(safe-area-inset-top)}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-  input,select,textarea{font-family:inherit;font-size:16px}
-  h1,h2,h3{margin:0}
-  a{color:var(--teal)}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+  input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
+  h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.01em}
+  .ic{width:22px;height:22px;flex-shrink:0;display:block}
+  .ic-sm{width:18px;height:18px}
+  .ic-lg{width:26px;height:26px}
 
-  /* Header */
+  /* HEADER */
   header{
-    position:sticky;top:0;z-index:40;
-    background:linear-gradient(135deg,var(--teal) 0%,var(--teal-2) 100%);
-    color:#fff;
-    padding:calc(env(safe-area-inset-top) + 16px) 20px 20px;
-    border-radius:0 0 26px 26px;
-    box-shadow:var(--shadow);
+    position:sticky;top:0;z-index:40;background:var(--card);
+    padding:calc(env(safe-area-inset-top) + 15px) 18px 15px;
+    border-bottom:1px solid var(--line);
   }
-  .brand{display:flex;align-items:center;gap:10px}
-  .brand .logo{
-    width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);
-    display:grid;place-items:center;font-size:18px;backdrop-filter:blur(4px)
-  }
-  .brand h1{font-size:19px;font-weight:700;letter-spacing:.2px}
-  .brand .sub{font-size:11.5px;opacity:.82;font-weight:500;margin-top:1px}
-  .hdr-top{display:flex;justify-content:space-between;align-items:flex-start}
-  .icon-btn{
-    width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.16);
-    display:grid;place-items:center;font-size:18px;color:#fff
-  }
+  .hdr-top{display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .mark{width:36px;height:36px;border-radius:11px;background:var(--accent);color:#fff;display:grid;place-items:center}
+  .brand .mark .ic{width:21px;height:21px}
+  .brand h1{font-size:18px}
+  .brand .sub{font-size:12px;color:var(--muted);margin-top:1px;font-weight:500}
+  .ghost-btn{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:var(--ink);border:1px solid var(--line);background:var(--card)}
+  .ghost-btn:active{background:var(--bg)}
 
-  /* Stats */
-  .stats{display:flex;gap:10px;margin-top:18px}
-  .stat{
-    flex:1;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);
-    border-radius:14px;padding:12px 12px 11px;text-align:center;
-    border:1px solid rgba(255,255,255,.12)
-  }
-  .stat .n{font-size:22px;font-weight:800;line-height:1}
-  .stat .l{font-size:10.5px;opacity:.9;margin-top:5px;font-weight:600;letter-spacing:.2px}
+  .stats{display:flex;gap:9px;margin-top:16px}
+  .stat{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:13px;padding:11px 12px}
+  .stat .n{font-size:21px;font-weight:750;line-height:1;letter-spacing:-.02em}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600}
+  .stat.ok .n{color:var(--ok)} .stat.warn .n{color:var(--warn)} .stat.bad .n{color:var(--bad)}
 
-  /* Layout */
-  main{padding:18px 16px 20px;max-width:560px;margin:0 auto}
-  .section-title{font-size:13px;font-weight:700;color:var(--muted);
-    text-transform:uppercase;letter-spacing:.6px;margin:6px 4px 12px;display:flex;justify-content:space-between;align-items:center}
-  .section-title button{font-size:12px;color:var(--teal);font-weight:700;text-transform:none;letter-spacing:0}
+  main{padding:16px 15px 20px;max-width:600px;margin:0 auto}
+  .section-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;
+    margin:4px 3px 11px;display:flex;justify-content:space-between;align-items:center}
+  .link-act{font-size:12.5px;color:var(--accent);font-weight:650;text-transform:none;letter-spacing:0;display:flex;align-items:center;gap:2px}
+  .link-act .ic{width:15px;height:15px}
 
-  /* Search */
-  .search{
-    display:flex;align-items:center;gap:8px;background:var(--card);
-    border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin-bottom:16px;box-shadow:var(--shadow)
-  }
-  .search input{border:none;outline:none;flex:1;background:none;color:var(--ink)}
-  .search span{font-size:16px;opacity:.5}
+  .search{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
+    border-radius:13px;padding:11px 13px;margin-bottom:15px;box-shadow:var(--shadow)}
+  .search input{border:none;outline:none;flex:1;background:none}
+  .search .ic{color:var(--muted-2)}
 
-  /* Card */
-  .card{
-    background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:12px;
-    box-shadow:var(--shadow);display:flex;gap:13px;align-items:center;
-    border:1px solid var(--line);position:relative;overflow:hidden;
-    transition:transform .12s ease
-  }
-  .card:active{transform:scale(.985)}
-  .card .status-bar{position:absolute;left:0;top:0;bottom:0;width:5px}
-  .thumb{
-    width:58px;height:58px;border-radius:13px;flex-shrink:0;object-fit:cover;
-    background:var(--teal-soft);display:grid;place-items:center;font-size:24px;color:var(--teal)
-  }
+  /* CARD */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px;margin-bottom:10px;
+    box-shadow:var(--shadow);display:flex;gap:12px;align-items:center;transition:transform .12s ease}
+  .card:active{transform:scale(.99)}
+  .cat-ic{width:44px;height:44px;border-radius:12px;flex-shrink:0;background:var(--accent-tint);
+    display:grid;place-items:center;color:var(--accent);overflow:hidden}
+  .cat-ic img{width:100%;height:100%;object-fit:cover}
   .card .info{flex:1;min-width:0}
-  .card .info .p{font-weight:700;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .info .p{font-weight:650;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .card .info .h{font-size:12.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .card .right{text-align:right;flex-shrink:0}
-  .badge{
-    display:inline-block;font-size:11px;font-weight:800;padding:4px 9px;border-radius:20px;letter-spacing:.2px
-  }
-  .b-green{background:var(--green-soft);color:var(--green)}
-  .b-amber{background:var(--amber-soft);color:var(--amber)}
-  .b-red{background:var(--red-soft);color:var(--red)}
-  .card .right .days{font-size:11px;color:var(--muted);margin-top:5px}
+  .card .right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:20px}
+  .pill .dot{width:6px;height:6px;border-radius:50%}
+  .p-ok{background:var(--ok-bg);color:var(--ok)} .p-ok .dot{background:var(--ok)}
+  .p-warn{background:var(--warn-bg);color:var(--warn)} .p-warn .dot{background:var(--warn)}
+  .p-bad{background:var(--bad-bg);color:var(--bad)} .p-bad .dot{background:var(--bad)}
+  .card .right .sub{font-size:11px;color:var(--muted-2)}
 
-  .empty{
-    text-align:center;padding:50px 24px;color:var(--muted)
-  }
-  .empty .em{font-size:46px;margin-bottom:12px}
-  .empty p{font-size:14px;line-height:1.5;margin:0 auto;max-width:280px}
+  .empty{text-align:center;padding:56px 26px;color:var(--muted)}
+  .empty .ei{width:52px;height:52px;margin:0 auto 14px;border-radius:15px;background:var(--card);
+    border:1px solid var(--line);display:grid;place-items:center;color:var(--muted-2)}
+  .empty .ei .ic{width:26px;height:26px}
+  .empty p{font-size:14px;line-height:1.55;margin:0 auto;max-width:270px}
 
-  /* Bottom nav */
-  nav{
-    position:fixed;bottom:0;left:0;right:0;z-index:45;
-    background:rgba(255,255,255,.92);backdrop-filter:blur(14px);
-    border-top:1px solid var(--line);
+  /* NAV */
+  nav{position:fixed;bottom:0;left:0;right:0;z-index:45;background:rgba(255,255,255,.94);
+    backdrop-filter:blur(14px);border-top:1px solid var(--line);
     display:flex;justify-content:space-around;align-items:center;
-    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
-  }
-  .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:600;flex:1;padding:4px 0}
-  .nav-btn .ic{font-size:21px}
-  .nav-btn.active{color:var(--teal)}
-  .fab{
-    width:60px;height:60px;border-radius:50%;
-    background:linear-gradient(135deg,var(--teal) 0%,var(--teal-2) 100%);
-    color:#fff;font-size:30px;display:grid;place-items:center;
-    box-shadow:0 8px 22px rgba(11,122,122,.45);margin-top:-26px;font-weight:300
-  }
+    padding:9px 6px calc(9px + env(safe-area-inset-bottom))}
+  .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted-2);
+    font-size:10.5px;font-weight:600;flex:1;padding:3px 0}
+  .nav-btn.active{color:var(--accent)}
+  .fab{width:56px;height:56px;border-radius:17px;background:var(--accent);color:#fff;display:grid;place-items:center;
+    box-shadow:0 6px 18px rgba(11,122,122,.4);margin-top:-22px}
+  .fab .ic{width:26px;height:26px}
+  .fab:active{background:var(--accent-2)}
 
-  /* Screens */
-  .screen{display:none}
-  .screen.active{display:block;animation:fade .25s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .screen{display:none} .screen.active{display:block;animation:fade .22s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-  /* Sheet / modal */
-  .sheet-wrap{
-    position:fixed;inset:0;z-index:100;display:none;
-    background:rgba(15,30,30,.45);backdrop-filter:blur(2px)
-  }
+  /* SHEET */
+  .sheet-wrap{position:fixed;inset:0;z-index:100;display:none;background:rgba(12,24,24,.42)}
   .sheet-wrap.open{display:block}
-  .sheet{
-    position:absolute;bottom:0;left:0;right:0;max-height:94vh;overflow-y:auto;
-    background:var(--bg);border-radius:24px 24px 0 0;
-    animation:slideUp .3s cubic-bezier(.2,.9,.3,1);
-    padding-bottom:calc(24px + env(safe-area-inset-bottom))
-  }
+  .sheet{position:absolute;bottom:0;left:0;right:0;max-height:94vh;overflow-y:auto;background:var(--card);
+    border-radius:22px 22px 0 0;animation:slideUp .28s cubic-bezier(.2,.9,.3,1);
+    padding-bottom:calc(22px + env(safe-area-inset-bottom))}
   @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
-  .sheet-head{
-    position:sticky;top:0;background:var(--bg);z-index:2;
-    padding:14px 18px 12px;display:flex;justify-content:space-between;align-items:center;
-    border-bottom:1px solid var(--line)
-  }
-  .sheet-head .grip{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:38px;height:4px;border-radius:4px;background:var(--line)}
-  .sheet-head h2{font-size:17px;font-weight:700}
+  .sheet-head{position:sticky;top:0;background:var(--card);z-index:2;padding:16px 18px 13px;
+    display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line-2)}
+  .sheet-head .grip{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:36px;height:4px;border-radius:4px;background:var(--line)}
+  .sheet-head h2{font-size:17px}
+  .close-btn{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line)}
   .sheet-body{padding:18px}
 
-  /* Form */
-  .field{margin-bottom:15px}
-  .field label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.2px}
-  .field input,.field select,.field textarea{
-    width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:13px;
-    background:var(--card);color:var(--ink);outline:none;transition:border .15s
-  }
-  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal)}
-  .field textarea{resize:vertical;min-height:70px}
-  .row2{display:flex;gap:11px}
-  .row2 .field{flex:1}
-  .m-in{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;outline:none;background:var(--card);color:var(--ink)}
-  .m-in:focus{border-color:var(--teal)}
+  /* FORM */
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12.5px;font-weight:650;color:var(--muted);margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid var(--line);
+    border-radius:12px;background:var(--card);outline:none;transition:border .15s,box-shadow .15s}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-tint)}
+  .field textarea{resize:vertical;min-height:66px}
+  .field.auto input{border-color:var(--accent);background:var(--accent-tint)}
+  .row2{display:flex;gap:10px} .row2 .field{flex:1}
+  .m-in{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;outline:none;background:var(--card)}
+  .m-in:focus{border-color:var(--accent)}
 
-  .btn{
-    width:100%;padding:15px;border-radius:14px;font-size:15.5px;font-weight:700;
-    background:linear-gradient(135deg,var(--teal) 0%,var(--teal-2) 100%);color:#fff;
-    box-shadow:0 6px 16px rgba(11,122,122,.3);display:flex;align-items:center;justify-content:center;gap:8px
-  }
-  .btn:disabled{opacity:.55;box-shadow:none}
-  .btn-ghost{background:var(--card);color:var(--teal);border:1.5px solid var(--teal-soft);box-shadow:none}
-  .btn-danger{background:var(--red-soft);color:var(--red);box-shadow:none}
+  .btn{width:100%;padding:14px;border-radius:13px;font-size:15px;font-weight:650;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s}
+  .btn:active{background:var(--accent-2)}
+  .btn:disabled{opacity:.5}
+  .btn .ic{width:19px;height:19px}
+  .btn-ghost{background:var(--card);color:var(--accent);border:1.5px solid var(--line)}
+  .btn-ghost:active{background:var(--bg)}
+  .btn-danger{background:var(--card);color:var(--bad);border:1.5px solid var(--bad-bg)}
   .btn-sm{padding:11px;font-size:14px}
 
-  /* Photo capture */
-  .capture-box{
-    border:2px dashed var(--line);border-radius:18px;padding:24px;text-align:center;
-    background:var(--card);margin-bottom:16px;position:relative;overflow:hidden
-  }
-  .capture-box.has-img{padding:0;border-style:solid;border-color:var(--teal-soft)}
-  .capture-box img{width:100%;display:block;border-radius:14px}
-  .capture-box .ph{font-size:38px;margin-bottom:8px;opacity:.6}
-  .capture-box .ph-t{font-size:14px;font-weight:600}
-  .capture-box .ph-s{font-size:12px;color:var(--muted);margin-top:3px}
+  .capture-box{border:1.5px dashed var(--line);border-radius:15px;padding:26px;text-align:center;background:var(--bg);
+    margin-bottom:14px;position:relative;overflow:hidden;transition:border-color .15s}
+  .capture-box:active{border-color:var(--accent)}
+  .capture-box.has-img{padding:0;border-style:solid;border-color:var(--line)}
+  .capture-box img{width:100%;display:block}
+  .capture-box .ci{width:40px;height:40px;margin:0 auto 9px;border-radius:11px;background:var(--card);
+    border:1px solid var(--line);display:grid;place-items:center;color:var(--accent)}
+  .capture-box .ct{font-size:14px;font-weight:650} .capture-box .cs{font-size:12px;color:var(--muted);margin-top:3px}
   .img-actions{position:absolute;top:8px;right:8px;display:flex;gap:6px}
-  .img-actions button{width:34px;height:34px;border-radius:10px;background:rgba(0,0,0,.55);color:#fff;font-size:15px;display:grid;place-items:center;backdrop-filter:blur(4px)}
+  .img-actions button{width:34px;height:34px;border-radius:10px;background:rgba(10,20,20,.6);color:#fff;
+    display:grid;place-items:center;backdrop-filter:blur(4px)}
+  .img-actions .ic{width:17px;height:17px}
 
-  .ai-btn{
-    width:100%;padding:14px;border-radius:14px;font-weight:700;font-size:15px;
-    background:linear-gradient(135deg,#7B5CF0 0%,#12A3A3 100%);color:#fff;
-    display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:16px;
-    box-shadow:0 6px 16px rgba(90,80,220,.28)
-  }
-  .ai-btn:disabled{opacity:.6}
-  .ai-note{font-size:11.5px;color:var(--muted);text-align:center;margin:-8px 0 16px}
+  .scan-btn{width:100%;padding:13px;border-radius:13px;font-weight:650;font-size:14.5px;background:var(--accent-tint);
+    color:var(--accent);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;border:1px solid #D4E6E6}
+  .scan-btn:disabled{opacity:.5}
+  .scan-btn .ic{width:19px;height:19px}
+  .scan-note{font-size:11.5px;color:var(--muted);text-align:center;margin:0 0 16px;line-height:1.5}
+  .scan-prog{display:none;margin:0 0 16px}
+  .scan-prog.on{display:block}
+  .scan-prog .bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+  .scan-prog .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s;border-radius:6px}
+  .scan-prog .lbl{font-size:12px;color:var(--muted);margin-top:7px;text-align:center;font-weight:600}
+  details.ocr{margin:0 0 16px;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:none}
+  details.ocr[open]{display:block} details.ocr.show{display:block}
+  details.ocr summary{padding:11px 13px;font-size:12.5px;font-weight:650;color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px}
+  details.ocr summary::-webkit-details-marker{display:none}
+  details.ocr pre{margin:0;padding:0 13px 13px;font-size:11px;color:var(--muted);white-space:pre-wrap;max-height:160px;overflow:auto;line-height:1.5}
 
-  /* Detail */
-  .detail-hero{position:relative;border-radius:20px;overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow);background:var(--teal-soft)}
-  .detail-hero img{width:100%;display:block;max-height:280px;object-fit:cover}
-  .detail-hero .no-img{height:150px;display:grid;place-items:center;font-size:52px;color:var(--teal)}
-  .countdown{
-    text-align:center;padding:20px;border-radius:18px;margin-bottom:16px;color:#fff
-  }
-  .countdown .big{font-size:38px;font-weight:800;line-height:1}
-  .countdown .lbl{font-size:13px;opacity:.92;margin-top:5px;font-weight:600}
-  .info-grid{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid var(--line)}
-  .info-row{display:flex;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line);gap:12px}
+  /* DETAIL */
+  .d-hero{border-radius:var(--r-lg);overflow:hidden;margin-bottom:15px;background:var(--accent-tint);border:1px solid var(--line)}
+  .d-hero img{width:100%;display:block;max-height:260px;object-fit:cover}
+  .d-hero .noimg{height:130px;display:grid;place-items:center;color:var(--accent)}
+  .d-hero .noimg .ic{width:44px;height:44px}
+  .d-title{font-size:20px;margin-bottom:2px}
+  .d-sub{color:var(--muted);font-size:13.5px;margin:0 0 15px}
+  .cd{border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;margin-bottom:15px;background:var(--card);box-shadow:var(--shadow)}
+  .cd .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .cd .big{font-size:32px;font-weight:750;line-height:1;letter-spacing:-.02em}
+  .cd .big small{font-size:14px;font-weight:600;color:var(--muted);margin-left:5px;letter-spacing:0}
+  .cd .prog{height:7px;border-radius:7px;background:var(--line);overflow:hidden}
+  .cd .prog i{display:block;height:100%;border-radius:7px}
+  .cd .meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted-2);margin-top:8px;font-weight:600}
+  .info-grid{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);margin-bottom:15px}
+  .info-row{display:flex;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--line-2);gap:12px}
   .info-row:last-child{border-bottom:none}
   .info-row .k{font-size:13px;color:var(--muted);font-weight:600;flex-shrink:0}
-  .info-row .v{font-size:14px;font-weight:600;text-align:right}
-  .doc-imgs{display:flex;gap:10px;margin-bottom:16px}
-  .doc-imgs .d{flex:1;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:var(--card);border:1px solid var(--line)}
-  .doc-imgs .d img{width:100%;height:110px;object-fit:cover;display:block}
-  .doc-imgs .d .cap{font-size:11px;padding:7px;text-align:center;color:var(--muted);font-weight:600}
+  .info-row .v{font-size:13.5px;font-weight:650;text-align:right}
+  .doc-imgs{display:flex;gap:9px;margin-bottom:15px}
+  .doc-imgs .d{flex:1;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .doc-imgs .d img{width:100%;height:100px;object-fit:cover;display:block}
+  .doc-imgs .d .cap{font-size:11px;padding:7px;text-align:center;color:var(--muted);font-weight:650;display:flex;align-items:center;justify-content:center;gap:5px}
+  .doc-imgs .d .cap .ic{width:13px;height:13px}
 
-  .toast{
-    position:fixed;bottom:calc(100px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
-    background:var(--ink);color:#fff;padding:12px 20px;border-radius:30px;font-size:13.5px;font-weight:600;
-    z-index:200;box-shadow:var(--shadow-lg);opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap
-  }
+  .toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:26px;font-size:13.5px;font-weight:600;z-index:200;
+    box-shadow:var(--shadow-lg);opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap;max-width:88vw}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
-
-  .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+  .spinner{width:17px;height:17px;border:2.3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+  .spinner.w{border-color:rgba(255,255,255,.4);border-top-color:#fff}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* Calendar list */
-  .cal-month{margin-bottom:20px}
-  .cal-month h3{font-size:14px;color:var(--teal);font-weight:800;margin-bottom:10px;padding-left:4px}
-  .cal-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:9px;box-shadow:var(--shadow);border:1px solid var(--line)}
-  .cal-date{width:46px;text-align:center;flex-shrink:0}
-  .cal-date .d{font-size:20px;font-weight:800;line-height:1;color:var(--teal)}
-  .cal-date .m{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700;margin-top:2px}
+  .cal-month{margin-bottom:18px}
+  .cal-month h3{font-size:13.5px;color:var(--ink);font-weight:700;margin-bottom:9px;padding-left:3px}
+  .cal-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .cal-date{width:44px;text-align:center;flex-shrink:0}
+  .cal-date .d{font-size:19px;font-weight:750;line-height:1} .cal-date .m{font-size:10px;color:var(--muted-2);text-transform:uppercase;font-weight:700;margin-top:2px}
+  .cal-item .info{flex:1;min-width:0}
+  .icon-act{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);display:grid;place-items:center;color:var(--accent);flex-shrink:0}
 
-  .hint{background:var(--teal-soft);border-radius:14px;padding:13px 15px;font-size:12.5px;color:var(--teal);line-height:1.5;margin-bottom:16px;font-weight:500}
-  .settings-group{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid var(--line)}
-  .settings-group .sg-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;padding:14px 16px 4px}
-  .set-field{padding:8px 16px 16px}
+  .hint{background:var(--accent-tint);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--accent-2);line-height:1.5;margin-bottom:15px;font-weight:500;display:flex;gap:9px;align-items:flex-start}
+  .hint .ic{width:17px;height:17px;flex-shrink:0;margin-top:1px}
+  .sgroup{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px}
+  .sgroup .sg-title{font-size:11px;font-weight:700;color:var(--muted-2);text-transform:uppercase;letter-spacing:.5px;padding:14px 15px 3px}
+  .set-field{padding:7px 15px 15px}
   .set-field label{font-size:13px;font-weight:600;display:block;margin-bottom:7px}
-  .set-field input,.set-field select{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;outline:none}
-  .link-row{padding:15px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
-  .link-row .chev{color:var(--muted)}
-  .back-btn{display:flex;align-items:center;gap:6px;color:var(--teal);font-weight:700;font-size:15px;margin-bottom:4px}
+  .set-field select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;outline:none;background:var(--card)}
+  .lrow{padding:14px 15px;border-top:1px solid var(--line-2);display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+  .lrow .l{display:flex;align-items:center;gap:11px} .lrow .l .ic{width:19px;height:19px;color:var(--muted)}
+  .lrow .chev{color:var(--muted-2)} .lrow.danger{color:var(--bad)} .lrow.danger .l .ic{color:var(--bad)}
+  .foot{text-align:center;font-size:11px;color:var(--muted-2);margin-top:14px}
 </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <header>
   <div class="hdr-top">
     <div class="brand">
-      <div class="logo">🛡️</div>
-      <div>
-        <h1>Garantie Tresor</h1>
-        <div class="sub">Alle Garantien an einem Ort</div>
-      </div>
+      <div class="mark" id="brandMark"></div>
+      <div><h1>Garantie Tresor</h1><div class="sub">Alle Garantien an einem Ort</div></div>
     </div>
-    <button class="icon-btn" onclick="openSettings()">⚙️</button>
+    <button class="ghost-btn" id="btnSettings" aria-label="Einstellungen"></button>
   </div>
   <div class="stats">
-    <div class="stat"><div class="n" id="stAktiv">0</div><div class="l">Aktiv</div></div>
-    <div class="stat"><div class="n" id="stBald">0</div><div class="l">Läuft bald ab</div></div>
-    <div class="stat"><div class="n" id="stAbgelaufen">0</div><div class="l">Abgelaufen</div></div>
+    <div class="stat ok"><div class="n" id="stAktiv">0</div><div class="l">Aktiv</div></div>
+    <div class="stat warn"><div class="n" id="stBald">0</div><div class="l">Bald fällig</div></div>
+    <div class="stat bad"><div class="n" id="stAbgelaufen">0</div><div class="l">Abgelaufen</div></div>
   </div>
 </header>
 
 <main>
-  <!-- HOME -->
   <section class="screen active" id="screen-home">
-    <div class="search">
-      <span>🔍</span>
-      <input id="searchInput" placeholder="Produkt oder Händler suchen" oninput="renderHome()">
-    </div>
-    <div class="section-title">Aktive Garantien <button onclick="switchScreen('calendar')">Kalender ›</button></div>
+    <div class="search"><span id="searchIc"></span><input id="searchInput" placeholder="Produkt oder Händler suchen" oninput="renderHome()"></div>
+    <div class="section-title">Aktive Garantien <button class="link-act" onclick="switchScreen('calendar')">Kalender <span id="ct1"></span></button></div>
     <div id="homeList"></div>
   </section>
 
-  <!-- CALENDAR -->
   <section class="screen" id="screen-calendar">
-    <div class="section-title">Ablauf-Kalender <button onclick="exportAllIcs()">Alle exportieren</button></div>
-    <div class="hint">💡 Tippe auf „Exportieren", um die Garantiefristen mit Erinnerung in deinen echten Kalender (iPhone, Google, Outlook) zu laden.</div>
+    <div class="section-title">Ablauf-Kalender <button class="link-act" onclick="exportAllIcs()">Alle exportieren</button></div>
+    <div class="hint"><span id="calHintIc"></span><span>Exportiere eine Frist, um sie mit Erinnerung in deinen Kalender auf iPhone, Google oder Outlook zu laden.</span></div>
     <div id="calList"></div>
   </section>
 
-  <!-- ARCHIVE -->
   <section class="screen" id="screen-archive">
     <div class="section-title">Archiv</div>
-    <div class="hint">Abgelaufene und manuell archivierte Garantien. Beleg und Bild bleiben erhalten.</div>
+    <div class="hint"><span id="arcHintIc"></span><span>Abgelaufene und manuell archivierte Garantien. Beleg und Bild bleiben erhalten.</span></div>
     <div id="archiveList"></div>
   </section>
 </main>
 
-<!-- ===== BOTTOM NAV ===== -->
 <nav>
-  <button class="nav-btn active" id="nav-home" onclick="switchScreen('home')">
-    <span class="ic">🏠</span><span>Übersicht</span>
-  </button>
-  <button class="nav-btn" id="nav-calendar" onclick="switchScreen('calendar')">
-    <span class="ic">📅</span><span>Kalender</span>
-  </button>
-  <button class="fab" onclick="openCapture()">+</button>
-  <button class="nav-btn" id="nav-archive" onclick="switchScreen('archive')">
-    <span class="ic">📦</span><span>Archiv</span>
-  </button>
-  <button class="nav-btn" id="nav-settings" onclick="openSettings()">
-    <span class="ic">⚙️</span><span>Mehr</span>
-  </button>
+  <button class="nav-btn active" id="nav-home" onclick="switchScreen('home')"><span data-ic="home"></span><span>Übersicht</span></button>
+  <button class="nav-btn" id="nav-calendar" onclick="switchScreen('calendar')"><span data-ic="calendar"></span><span>Kalender</span></button>
+  <button class="fab" onclick="openCapture()" aria-label="Neu erfassen"><span data-ic="plus"></span></button>
+  <button class="nav-btn" id="nav-archive" onclick="switchScreen('archive')"><span data-ic="archive"></span><span>Archiv</span></button>
+  <button class="nav-btn" id="nav-settings" onclick="openSettings()"><span data-ic="settings"></span><span>Mehr</span></button>
 </nav>
 
-<!-- ===== CAPTURE / EDIT SHEET ===== -->
-<div class="sheet-wrap" id="captureSheet">
-  <div class="sheet">
-    <div class="sheet-head">
-      <div class="grip"></div>
-      <h2 id="captureTitle">Quittung erfassen</h2>
-      <button class="icon-btn" style="background:var(--line);color:var(--ink)" onclick="closeSheet('captureSheet')">✕</button>
+<!-- CAPTURE / EDIT -->
+<div class="sheet-wrap" id="captureSheet"><div class="sheet">
+  <div class="sheet-head"><div class="grip"></div><h2 id="captureTitle">Beleg erfassen</h2><button class="close-btn" data-ic="x" onclick="closeSheet('captureSheet')"></button></div>
+  <div class="sheet-body">
+    <div class="capture-box" id="belegBox" onclick="pickImage('beleg')"></div>
+    <button class="scan-btn" id="scanBtn" onclick="scanReceipt()"><span data-ic="scan"></span> Beleg automatisch auslesen</button>
+    <div class="scan-note" id="scanNote">Läuft direkt auf deinem Gerät, kostenlos und ohne Konto.</div>
+    <div class="scan-prog" id="scanProg"><div class="bar"><i id="scanBar"></i></div><div class="lbl" id="scanLbl">Beleg wird gelesen</div></div>
+    <details class="ocr" id="ocrBox"><summary><span data-ic="receipt"></span> Erkannter Text</summary><pre id="ocrText"></pre></details>
+
+    <div class="field"><label>Produkt</label><input id="fProdukt" placeholder="z.B. Kaffeemaschine"></div>
+    <div class="field"><label>Händler</label><input id="fHaendler" placeholder="z.B. MediaMarkt"></div>
+    <div class="row2">
+      <div class="field"><label>Kaufdatum</label><input id="fKaufdatum" type="date"></div>
+      <div class="field"><label>Betrag</label><input id="fBetrag" type="number" step="0.01" placeholder="0.00"></div>
     </div>
-    <div class="sheet-body">
-      <!-- Beleg -->
-      <div class="capture-box" id="belegBox" onclick="pickImage('beleg')">
-        <div class="ph">🧾</div>
-        <div class="ph-t">Quittung fotografieren</div>
-        <div class="ph-s">oder aus der Galerie wählen</div>
-      </div>
-
-      <button class="ai-btn" id="aiBtn" onclick="parseWithAI()">✨ Mit KI auslesen</button>
-      <div class="ai-note" id="aiNote">Liest Händler, Produkt, Datum und Betrag automatisch aus.</div>
-
-      <div class="field">
-        <label>Produkt</label>
-        <input id="fProdukt" placeholder="z.B. Kaffeemaschine De'Longhi">
-      </div>
-      <div class="field">
-        <label>Händler</label>
-        <input id="fHaendler" placeholder="z.B. MediaMarkt">
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Kaufdatum</label>
-          <input id="fKaufdatum" type="date">
-        </div>
-        <div class="field">
-          <label>Betrag</label>
-          <input id="fBetrag" type="number" step="0.01" placeholder="0.00">
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Garantie</label>
-          <select id="fGarantie" onchange="toggleCustomMonths()">
-            <option value="24">2 Jahre (gesetzlich CH)</option>
-            <option value="12">1 Jahr</option>
-            <option value="36">3 Jahre</option>
-            <option value="60">5 Jahre</option>
-            <option value="custom">Individuell...</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Kategorie</label>
-          <select id="fKategorie">
-            <option>Elektronik</option>
-            <option>Haushalt</option>
-            <option>Werkzeug</option>
-            <option>Möbel</option>
-            <option>Kleidung</option>
-            <option>Fahrzeug</option>
-            <option>Sonstiges</option>
-          </select>
-        </div>
-      </div>
-      <div class="field" id="customMonthsField" style="display:none">
-        <label>Garantie in Monaten</label>
-        <input id="fCustomMonths" type="number" placeholder="z.B. 48">
-      </div>
-      <div class="field">
-        <label>Seriennummer (optional)</label>
-        <input id="fSeriennummer" placeholder="S/N">
-      </div>
-      <div class="field">
-        <label>Notizen (optional)</label>
-        <textarea id="fNotizen" placeholder="z.B. Standort Beleg, Zubehör..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Produktbild (optional)</label>
-        <div class="capture-box" id="produktBox" onclick="pickImage('produkt')" style="padding:18px">
-          <div class="ph">📷</div>
-          <div class="ph-t">Foto vom Produkt</div>
-          <div class="ph-s">z.B. die neue Kaffeemaschine</div>
-        </div>
-      </div>
-
-      <button class="btn" onclick="saveItem()">💾 Garantie speichern</button>
+    <div class="row2">
+      <div class="field"><label>Garantie</label><select id="fGarantie" onchange="toggleCustomMonths()">
+        <option value="24">2 Jahre</option><option value="12">1 Jahr</option><option value="36">3 Jahre</option><option value="60">5 Jahre</option><option value="custom">Individuell</option>
+      </select></div>
+      <div class="field"><label>Kategorie</label><select id="fKategorie">
+        <option>Elektronik</option><option>Haushalt</option><option>Werkzeug</option><option>Möbel</option><option>Kleidung</option><option>Fahrzeug</option><option>Sonstiges</option>
+      </select></div>
     </div>
+    <div class="field" id="customMonthsField" style="display:none"><label>Garantie in Monaten</label><input id="fCustomMonths" type="number" placeholder="z.B. 48"></div>
+    <div class="field"><label>Seriennummer <span style="color:var(--muted-2);font-weight:500">(optional)</span></label><input id="fSeriennummer" placeholder="S/N"></div>
+    <div class="field"><label>Notizen <span style="color:var(--muted-2);font-weight:500">(optional)</span></label><textarea id="fNotizen" placeholder="z.B. Standort Beleg, Zubehör"></textarea></div>
+    <div class="field"><label>Produktbild <span style="color:var(--muted-2);font-weight:500">(optional)</span></label>
+      <div class="capture-box" id="produktBox" onclick="pickImage('produkt')" style="padding:20px"></div>
+    </div>
+    <button class="btn" onclick="saveItem()"><span data-ic="check"></span> Garantie speichern</button>
   </div>
-</div>
+</div></div>
 
-<!-- ===== DETAIL SHEET ===== -->
-<div class="sheet-wrap" id="detailSheet">
-  <div class="sheet">
-    <div class="sheet-head">
-      <div class="grip"></div>
-      <h2>Details</h2>
-      <button class="icon-btn" style="background:var(--line);color:var(--ink)" onclick="closeSheet('detailSheet')">✕</button>
+<!-- MULTI -->
+<div class="sheet-wrap" id="multiSheet"><div class="sheet">
+  <div class="sheet-head"><div class="grip"></div><h2>Mehrere Produkte</h2><button class="close-btn" data-ic="x" onclick="closeSheet('multiSheet')"></button></div>
+  <div class="sheet-body">
+    <div class="hint" id="multiHint"></div>
+    <div class="row2">
+      <div class="field"><label>Garantie für alle</label><select id="mGarantie">
+        <option value="24">2 Jahre</option><option value="12">1 Jahr</option><option value="36">3 Jahre</option><option value="60">5 Jahre</option></select></div>
+      <div class="field"><label>Händler</label><input id="mHaendler" placeholder="Händler"></div>
     </div>
-    <div class="sheet-body" id="detailBody"></div>
+    <div class="field"><label>Kaufdatum</label><input id="mKaufdatum" type="date"></div>
+    <div id="multiList"></div>
+    <button class="btn" onclick="saveMultiple()"><span data-ic="check"></span> Ausgewählte speichern</button>
+    <button class="btn btn-ghost btn-sm" style="margin-top:9px" onclick="fallbackSingle()">Als einzelnen Eintrag bearbeiten</button>
   </div>
-</div>
+</div></div>
 
-<!-- ===== MULTI-PRODUKT SHEET ===== -->
-<div class="sheet-wrap" id="multiSheet">
-  <div class="sheet">
-    <div class="sheet-head">
-      <div class="grip"></div>
-      <h2>Produkte erkannt</h2>
-      <button class="icon-btn" style="background:var(--line);color:var(--ink)" onclick="closeSheet('multiSheet')">✕</button>
+<!-- DETAIL -->
+<div class="sheet-wrap" id="detailSheet"><div class="sheet">
+  <div class="sheet-head"><div class="grip"></div><h2>Details</h2><button class="close-btn" data-ic="x" onclick="closeSheet('detailSheet')"></button></div>
+  <div class="sheet-body" id="detailBody"></div>
+</div></div>
+
+<!-- SETTINGS -->
+<div class="sheet-wrap" id="settingsSheet"><div class="sheet">
+  <div class="sheet-head"><div class="grip"></div><h2>Einstellungen</h2><button class="close-btn" data-ic="x" onclick="closeSheet('settingsSheet')"></button></div>
+  <div class="sheet-body">
+    <div class="sgroup">
+      <div class="sg-title">Standard</div>
+      <div class="set-field"><label>Standard-Garantie</label><select id="setDefaultMonths">
+        <option value="24">2 Jahre</option><option value="12">1 Jahr</option><option value="36">3 Jahre</option></select></div>
+      <div class="set-field"><label>Währung</label><select id="setCurrency"><option>CHF</option><option>EUR</option><option>USD</option></select></div>
+      <div class="set-field"><label>Warnung bald fällig</label><select id="setWarnDays">
+        <option value="30">30 Tage vorher</option><option value="14">14 Tage vorher</option><option value="60">60 Tage vorher</option><option value="90">90 Tage vorher</option></select></div>
     </div>
-    <div class="sheet-body">
-      <div class="hint" id="multiHint"></div>
-      <div class="row2">
-        <div class="field">
-          <label>Garantie für alle</label>
-          <select id="mGarantie">
-            <option value="24">2 Jahre (gesetzlich CH)</option>
-            <option value="12">1 Jahr</option>
-            <option value="36">3 Jahre</option>
-            <option value="60">5 Jahre</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Händler</label>
-          <input id="mHaendler" placeholder="Händler">
-        </div>
-      </div>
-      <div class="field">
-        <label>Kaufdatum</label>
-        <input id="mKaufdatum" type="date">
-      </div>
-      <div id="multiList"></div>
-      <button class="btn" onclick="saveMultiple()">💾 Ausgewählte speichern</button>
-      <button class="btn btn-ghost btn-sm" style="margin-top:9px" onclick="fallbackSingle()">Stattdessen als einzelnen Eintrag bearbeiten</button>
+    <div class="sgroup">
+      <div class="sg-title">Daten</div>
+      <div class="lrow" onclick="requestNotify()"><span class="l"><span data-ic="bell"></span> Benachrichtigungen</span><span class="chev" id="notifyState" data-ic="chevron"></span></div>
+      <div class="lrow" onclick="loadDemo()"><span class="l"><span data-ic="shield"></span> Beispieldaten laden</span><span class="chev" data-ic="chevron"></span></div>
+      <div class="lrow" onclick="exportBackup()"><span class="l"><span data-ic="download"></span> Backup exportieren</span><span class="chev" data-ic="chevron"></span></div>
+      <div class="lrow" onclick="document.getElementById('importFile').click()"><span class="l"><span data-ic="upload"></span> Backup importieren</span><span class="chev" data-ic="chevron"></span></div>
+      <div class="lrow danger" onclick="clearAll()"><span class="l"><span data-ic="trash"></span> Alle Daten löschen</span><span class="chev" data-ic="chevron"></span></div>
     </div>
+    <button class="btn" onclick="saveSettings()"><span data-ic="check"></span> Speichern</button>
+    <p class="foot">Garantie Tresor von svmgLabs. Deine Daten bleiben lokal auf deinem Gerät.</p>
   </div>
-</div>
-
-<!-- ===== SETTINGS SHEET ===== -->
-<div class="sheet-wrap" id="settingsSheet">
-  <div class="sheet">
-    <div class="sheet-head">
-      <div class="grip"></div>
-      <h2>Einstellungen</h2>
-      <button class="icon-btn" style="background:var(--line);color:var(--ink)" onclick="closeSheet('settingsSheet')">✕</button>
-    </div>
-    <div class="sheet-body">
-      <div class="settings-group">
-        <div class="sg-title">✨ KI-Auslesen (optional)</div>
-        <div class="set-field">
-          <label>Anthropic API-Key</label>
-          <input id="setApiKey" type="password" placeholder="sk-ant-...">
-        </div>
-        <div class="set-field">
-          <label>Modell</label>
-          <select id="setModel">
-            <option value="claude-haiku-4-5-20251001">Haiku 4.5 (günstig, empfohlen)</option>
-            <option value="claude-sonnet-5">Sonnet 5 (genauer, teurer)</option>
-          </select>
-        </div>
-        <div class="set-field" style="padding-top:0">
-          <div class="hint" style="margin:0">
-            Dein Key bleibt nur lokal auf diesem Gerät. Kosten pro Quittung: grob 0,3 bis 2 Rappen, direkt bei Anthropic. Key holen unter console.anthropic.com.
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-group">
-        <div class="sg-title">Standard</div>
-        <div class="set-field">
-          <label>Standard-Garantie</label>
-          <select id="setDefaultMonths">
-            <option value="24">2 Jahre (CH gesetzlich)</option>
-            <option value="12">1 Jahr</option>
-            <option value="36">3 Jahre</option>
-          </select>
-        </div>
-        <div class="set-field">
-          <label>Währung</label>
-          <select id="setCurrency">
-            <option>CHF</option><option>EUR</option><option>USD</option>
-          </select>
-        </div>
-        <div class="set-field">
-          <label>Warnung „läuft bald ab" ab</label>
-          <select id="setWarnDays">
-            <option value="30">30 Tage vorher</option>
-            <option value="14">14 Tage vorher</option>
-            <option value="60">60 Tage vorher</option>
-            <option value="90">90 Tage vorher</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="settings-group">
-        <div class="sg-title">Daten</div>
-        <div class="link-row" onclick="requestNotify()">🔔 Benachrichtigungen erlauben <span class="chev" id="notifyState">›</span></div>
-        <div class="link-row" onclick="loadDemo()">🧪 Demo-Daten laden <span class="chev">›</span></div>
-        <div class="link-row" onclick="exportBackup()">⬇️ Backup exportieren (JSON) <span class="chev">›</span></div>
-        <div class="link-row" onclick="document.getElementById('importFile').click()">⬆️ Backup importieren <span class="chev">›</span></div>
-        <div class="link-row" style="color:var(--red)" onclick="clearAll()">🗑️ Alle Daten löschen <span class="chev">›</span></div>
-      </div>
-
-      <button class="btn" onclick="saveSettings()">Speichern</button>
-      <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:14px">Garantie Tresor · svmgLabs · lokal & privat</p>
-    </div>
-  </div>
-</div>
+</div></div>
 
 <input type="file" id="imgInput" accept="image/*" capture="environment" style="display:none">
 <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importBackup(event)">
 <div class="toast" id="toast"></div>
 
 <script>
-/* ================= STATE ================= */
-const DB_NAME='garantie_tresor', STORE='items';
-let db=null;
-let items=[];
-let settings={apiKey:'',model:'claude-haiku-4-5-20251001',defaultMonths:24,currency:'CHF',warnDays:30};
-let draft={id:null,belegBild:null,produktBild:null};
-let pickTarget='beleg';
+/* ============ ICONS (Lucide-style, MIT) ============ */
+const ICONS={
+  home:'<path d="M3 10.2 12 3l9 7.2"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/>',
+  calendar:'<rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M16 3v3M8 3v3M3.5 9.5h17"/>',
+  archive:'<rect x="3.5" y="4" width="17" height="4" rx="1.2"/><path d="M5 8.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V8.5"/><path d="M10 12h4"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8 6 18M18 6l1.8-1.8"/>',
+  plus:'<path d="M12 5.5v13M5.5 12h13"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4-4"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  check:'<path d="M20 6.5 9.2 17.5 4 12.3"/>',
+  chevron:'<path d="m9 5 7 7-7 7"/>',
+  back:'<path d="m15 5-7 7 7 7"/>',
+  scan:'<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M4 12h16"/>',
+  receipt:'<path d="M5 3v18l2-1.2L9 21l2-1.2L13 21l2-1.2L17 21l2-1.2V3l-2 1.2L15 3l-2 1.2L11 3 9 4.2 7 3Z"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
+  camera:'<path d="M4 8.5A2 2 0 0 1 6 6.5h1.5l1.2-2h6.6l1.2 2H18a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.5"/>',
+  image:'<rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8.5" cy="9" r="1.6"/><path d="m4 18 5-5 3.5 3.5L16 13l4 4"/>',
+  edit:'<path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="M13.5 6.5l3 3"/>',
+  trash:'<path d="M4 7h16M9 7V4.5h6V7M6.5 7l.8 12.5A1.5 1.5 0 0 0 8.8 21h6.4a1.5 1.5 0 0 0 1.5-1.5L17.5 7M10 11v6M14 11v6"/>',
+  bell:'<path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10.5 20a2 2 0 0 0 3 0"/>',
+  download:'<path d="M20 15.5V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3.5M8 11l4 4 4-4M12 15V3.5"/>',
+  upload:'<path d="M20 15.5V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3.5M8 7.5l4-4 4 4M12 3.5V15"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.2l3.3 2"/>',
+  shield:'<path d="M12 21.5s7.5-3.8 7.5-9.5V5.2L12 2.5 4.5 5.2V12c0 5.7 7.5 9.5 7.5 9.5Z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/>',
+  calx:'<rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M16 3v3M8 3v3M3.5 9.5h17"/><path d="m10 13 4 4M14 13l-4 4"/>',
+  smartphone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
+  wrench:'<path d="M15 5.5a4 4 0 0 0-5.3 5L4 16.2V20h3.8l5.7-5.7a4 4 0 0 0 5-5.3l-2.7 2.7-2.5-2.5L15 5.5Z"/>',
+  shirt:'<path d="M15.5 3 12 5.5 8.5 3 3.6 6.2l1.9 3.4L8 8.2V20a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V8.2l2.5 1.4 1.9-3.4L15.5 3Z"/>',
+  car:'<path d="M6.5 16H4v-3.2a1 1 0 0 1 .7-1L6 11.5l1.6-3.6A2 2 0 0 1 9.5 6.5h5a2 2 0 0 1 1.9 1.4L18 11.5l1.3.3a1 1 0 0 1 .7 1V16h-2.5M9 16h6"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/>',
+  sofa:'<path d="M5 11V8.5A2.5 2.5 0 0 1 7.5 6h9A2.5 2.5 0 0 1 19 8.5V11"/><path d="M3.5 12.5A2 2 0 0 1 7 14v2h10v-2a2 2 0 0 1 3.5-1.3 2 2 0 0 1 .5 1.3V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a2 2 0 0 1 .5-1.5Z"/><path d="M6 19v1.5M18 19v1.5"/>',
+  package:'<path d="M20.5 15.8V8.2a1.6 1.6 0 0 0-.8-1.4l-6.9-4a1.6 1.6 0 0 0-1.6 0l-6.9 4a1.6 1.6 0 0 0-.8 1.4v7.6a1.6 1.6 0 0 0 .8 1.4l6.9 4a1.6 1.6 0 0 0 1.6 0l6.9-4a1.6 1.6 0 0 0 .8-1.4Z"/><path d="M3.5 7.5 12 12.5l8.5-5M12 22V12.5"/>'
+};
+function svg(name,cls){return `<svg class="ic ${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;}
+function paintIcons(root){(root||document).querySelectorAll('[data-ic]').forEach(el=>{el.innerHTML=svg(el.getAttribute('data-ic'));el.removeAttribute('data-ic');});}
+const catIcon={Elektronik:'smartphone',Haushalt:'home',Werkzeug:'wrench',Möbel:'sofa',Kleidung:'shirt',Fahrzeug:'car',Sonstiges:'package'};
 
-/* ================= INDEXEDDB ================= */
-function openDB(){
-  return new Promise((res,rej)=>{
-    const r=indexedDB.open(DB_NAME,1);
-    r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};
-    r.onsuccess=e=>{db=e.target.result;res();};
-    r.onerror=e=>rej(e);
-  });
-}
+/* ============ STATE ============ */
+const DB_NAME='garantie_tresor',STORE='items';
+let db=null,items=[],draft={id:null,belegBild:null,produktBild:null},pickTarget='beleg',lastOcrText='';
+let settings={defaultMonths:24,currency:'CHF',warnDays:30};
+
+/* ============ INDEXEDDB ============ */
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};r.onsuccess=e=>{db=e.target.result;res();};r.onerror=rej;});}
 function dbAll(){return new Promise(res=>{const t=db.transaction(STORE,'readonly').objectStore(STORE).getAll();t.onsuccess=()=>res(t.result||[]);});}
 function dbPut(o){return new Promise(res=>{const t=db.transaction(STORE,'readwrite').objectStore(STORE).put(o);t.onsuccess=()=>res();});}
 function dbDel(id){return new Promise(res=>{const t=db.transaction(STORE,'readwrite').objectStore(STORE).delete(id);t.onsuccess=()=>res();});}
 function dbClear(){return new Promise(res=>{const t=db.transaction(STORE,'readwrite').objectStore(STORE).clear();t.onsuccess=()=>res();});}
 
-/* ================= HELPERS ================= */
+/* ============ HELPERS ============ */
 const $=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function fmtDate(iso){if(!iso)return '-';const d=new Date(iso);return d.toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function fmtDate(iso){if(!iso)return '-';return new Date(iso).toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});}
 function addMonths(iso,m){const d=new Date(iso);d.setMonth(d.getMonth()+parseInt(m));return d;}
 function ablauf(it){return addMonths(it.kaufdatum,it.garantieMonate);}
-function daysLeft(it){const now=new Date();now.setHours(0,0,0,0);const a=ablauf(it);a.setHours(0,0,0,0);return Math.round((a-now)/86400000);}
-function statusOf(it){const d=daysLeft(it);if(d<0)return 'red';if(d<=settings.warnDays)return 'amber';return 'green';}
+function daysLeft(it){const n=new Date();n.setHours(0,0,0,0);const a=ablauf(it);a.setHours(0,0,0,0);return Math.round((a-n)/86400000);}
+function statusOf(it){const d=daysLeft(it);if(d<0)return 'bad';if(d<=settings.warnDays)return 'warn';return 'ok';}
 function money(it){return (it.betrag?Number(it.betrag).toFixed(2):'-')+' '+(it.waehrung||settings.currency);}
+function esc(s){return(s||'').toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
 
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+function compressImage(file,maxDim=1400,q=.74){return new Promise(res=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{let w=img.width,h=img.height;if(w>h&&w>maxDim){h=h*maxDim/w;w=maxDim;}else if(h>=w&&h>maxDim){w=w*maxDim/h;h=maxDim;}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',q));};img.src=url;});}
 
-/* ================= IMAGE COMPRESS ================= */
-function compressImage(file,maxDim=1280,quality=.72){
-  return new Promise(res=>{
-    const img=new Image();const url=URL.createObjectURL(file);
-    img.onload=()=>{
-      let{width:w,height:h}=img;
-      if(w>h&&w>maxDim){h=h*maxDim/w;w=maxDim;}
-      else if(h>=w&&h>maxDim){w=w*maxDim/h;h=maxDim;}
-      const c=document.createElement('canvas');c.width=w;c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      URL.revokeObjectURL(url);
-      res(c.toDataURL('image/jpeg',quality));
-    };
-    img.src=url;
-  });
-}
-
-/* ================= SCREENS / NAV ================= */
-function switchScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  $('screen-'+name).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const nb=$('nav-'+name);if(nb)nb.classList.add('active');
-  window.scrollTo(0,0);
-  if(name==='calendar')renderCalendar();
-  if(name==='archive')renderArchive();
-}
+/* ============ NAV ============ */
+function switchScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('screen-'+name).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));const nb=$('nav-'+name);if(nb)nb.classList.add('active');window.scrollTo(0,0);if(name==='calendar')renderCalendar();if(name==='archive')renderArchive();}
 function openSheet(id){$(id).classList.add('open');document.body.style.overflow='hidden';}
 function closeSheet(id){$(id).classList.remove('open');document.body.style.overflow='';}
 
-/* ================= RENDER ================= */
-function recomputeStats(){
-  const act=items.filter(i=>!i.archiviert);
-  $('stAktiv').textContent=act.filter(i=>daysLeft(i)>=0).length;
-  $('stBald').textContent=act.filter(i=>{const d=daysLeft(i);return d>=0&&d<=settings.warnDays;}).length;
-  $('stAbgelaufen').textContent=items.filter(i=>daysLeft(i)<0).length;
-}
-function cardHtml(it){
-  const st=statusOf(it),d=daysLeft(it);
-  const colClass=st==='green'?'b-green':st==='amber'?'b-amber':'b-red';
-  const barCol=st==='green'?'var(--green)':st==='amber'?'var(--amber)':'var(--red)';
-  const label=d<0?'Abgelaufen':d===0?'Läuft heute ab':d+' Tage';
-  const thumb=it.produktBild?`<img class="thumb" src="${it.produktBild}">`:`<div class="thumb">${catEmoji(it.kategorie)}</div>`;
-  return `<div class="card" onclick="openDetail('${it.id}')">
-    <div class="status-bar" style="background:${barCol}"></div>
-    ${thumb}
-    <div class="info">
-      <div class="p">${esc(it.produkt||'Ohne Namen')}</div>
-      <div class="h">${esc(it.haendler||'-')} · ${money(it)}</div>
-    </div>
-    <div class="right">
-      <span class="badge ${colClass}">${label}</span>
-      <div class="days">bis ${fmtDate(ablauf(it).toISOString())}</div>
-    </div>
-  </div>`;
-}
-function catEmoji(c){return{Elektronik:'📱',Haushalt:'🏠',Werkzeug:'🔧',Möbel:'🛋️',Kleidung:'👕',Fahrzeug:'🚗'}[c]||'🛡️';}
-function esc(s){return(s||'').toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+/* ============ RENDER ============ */
+function recomputeStats(){const act=items.filter(i=>!i.archiviert);$('stAktiv').textContent=act.filter(i=>daysLeft(i)>=0).length;$('stBald').textContent=act.filter(i=>{const d=daysLeft(i);return d>=0&&d<=settings.warnDays;}).length;$('stAbgelaufen').textContent=items.filter(i=>daysLeft(i)<0).length;}
+function pillHtml(it){const st=statusOf(it),d=daysLeft(it);const cls=st==='ok'?'p-ok':st==='warn'?'p-warn':'p-bad';const label=d<0?'Abgelaufen':d===0?'Heute fällig':d+' Tage';return `<span class="pill ${cls}"><span class="dot"></span>${label}</span>`;}
+function cardHtml(it){const ic=it.produktBild?`<img src="${it.produktBild}">`:svg(catIcon[it.kategorie]||'package');return `<div class="card" onclick="openDetail('${it.id}')"><div class="cat-ic">${ic}</div><div class="info"><div class="p">${esc(it.produkt||'Ohne Namen')}</div><div class="h">${esc(it.haendler||'-')} · ${money(it)}</div></div><div class="right">${pillHtml(it)}<span class="sub">bis ${fmtDate(ablauf(it).toISOString())}</span></div></div>`;}
+function renderHome(){recomputeStats();const q=($('searchInput').value||'').toLowerCase();let list=items.filter(i=>!i.archiviert);if(q)list=list.filter(i=>((i.produkt||'')+' '+(i.haendler||'')).toLowerCase().includes(q));list.sort((a,b)=>daysLeft(a)-daysLeft(b));const el=$('homeList');if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">${svg('shield')}</div><p>${q?'Nichts gefunden.':'Noch keine Garantien. Tippe unten auf Plus und erfasse deinen ersten Beleg.'}</p></div>`;return;}el.innerHTML=list.map(cardHtml).join('');}
+function renderArchive(){const list=items.filter(i=>i.archiviert||daysLeft(i)<0).sort((a,b)=>daysLeft(b)-daysLeft(a));const el=$('archiveList');if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">${svg('archive')}</div><p>Archiv ist leer.</p></div>`;return;}el.innerHTML=list.map(cardHtml).join('');}
+function renderCalendar(){const list=items.filter(i=>!i.archiviert).sort((a,b)=>ablauf(a)-ablauf(b));const el=$('calList');if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">${svg('calendar')}</div><p>Noch keine Fristen vorhanden.</p></div>`;return;}const g={},mn=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],ma=['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];list.forEach(it=>{const a=ablauf(it),k=a.getFullYear()+'-'+String(a.getMonth()).padStart(2,'0');(g[k]=g[k]||[]).push(it);});let html='';Object.keys(g).sort().forEach(k=>{const[y,m]=k.split('-');html+=`<div class="cal-month"><h3>${mn[+m]} ${y}</h3>`;g[k].forEach(it=>{const a=ablauf(it),st=statusOf(it),col=st==='ok'?'var(--ok)':st==='warn'?'var(--warn)':'var(--bad)';html+=`<div class="cal-item" onclick="openDetail('${it.id}')"><div class="cal-date"><div class="d" style="color:${col}">${a.getDate()}</div><div class="m">${ma[a.getMonth()]}</div></div><div class="info"><div class="p" style="font-weight:650;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.produkt)}</div><div class="h" style="font-size:12px;color:var(--muted)">${esc(it.haendler||'')}</div></div><button class="icon-act" onclick="event.stopPropagation();exportIcs('${it.id}')">${svg('calendar','ic-sm')}</button></div>`;});html+='</div>';});el.innerHTML=html;}
 
-function renderHome(){
-  recomputeStats();
-  const q=($('searchInput').value||'').toLowerCase();
-  let list=items.filter(i=>!i.archiviert);
-  if(q)list=list.filter(i=>(i.produkt+' '+i.haendler).toLowerCase().includes(q));
-  list.sort((a,b)=>daysLeft(a)-daysLeft(b));
-  const el=$('homeList');
-  if(!list.length){
-    el.innerHTML=`<div class="empty"><div class="em">🛡️</div><p>${q?'Nichts gefunden.':'Noch keine Garantien. Tippe auf das <b>+</b> und fotografiere deine erste Quittung.'}</p></div>`;
-    return;
-  }
-  el.innerHTML=list.map(cardHtml).join('');
-}
-function renderArchive(){
-  const list=items.filter(i=>i.archiviert||daysLeft(i)<0).sort((a,b)=>daysLeft(b)-daysLeft(a));
-  const el=$('archiveList');
-  if(!list.length){el.innerHTML=`<div class="empty"><div class="em">📦</div><p>Archiv ist leer.</p></div>`;return;}
-  el.innerHTML=list.map(cardHtml).join('');
-}
-function renderCalendar(){
-  const list=items.filter(i=>!i.archiviert).sort((a,b)=>ablauf(a)-ablauf(b));
-  const el=$('calList');
-  if(!list.length){el.innerHTML=`<div class="empty"><div class="em">📅</div><p>Noch keine Fristen vorhanden.</p></div>`;return;}
-  const groups={};
-  list.forEach(it=>{const a=ablauf(it);const key=a.getFullYear()+'-'+String(a.getMonth()).padStart(2,'0');(groups[key]=groups[key]||[]).push(it);});
-  const monthNames=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-  const mAbbr=['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
-  let html='';
-  Object.keys(groups).sort().forEach(k=>{
-    const [y,m]=k.split('-');
-    html+=`<div class="cal-month"><h3>${monthNames[+m]} ${y}</h3>`;
-    groups[k].forEach(it=>{
-      const a=ablauf(it),st=statusOf(it);
-      const col=st==='green'?'var(--green)':st==='amber'?'var(--amber)':'var(--red)';
-      html+=`<div class="cal-item" onclick="openDetail('${it.id}')">
-        <div class="cal-date"><div class="d" style="color:${col}">${a.getDate()}</div><div class="m">${mAbbr[a.getMonth()]}</div></div>
-        <div class="info" style="flex:1"><div class="p" style="font-weight:700;font-size:14.5px">${esc(it.produkt)}</div><div class="h" style="font-size:12px;color:var(--muted)">${esc(it.haendler)}</div></div>
-        <button class="btn btn-ghost btn-sm" style="width:auto;padding:8px 12px" onclick="event.stopPropagation();exportIcs('${it.id}')">📅</button>
-      </div>`;
-    });
-    html+='</div>';
-  });
-  el.innerHTML=html;
-}
-
-/* ================= CAPTURE FLOW ================= */
-function openCapture(edit){
-  draft={id:null,belegBild:null,produktBild:null};
-  $('captureTitle').textContent='Quittung erfassen';
-  $('fProdukt').value='';$('fHaendler').value='';
-  $('fKaufdatum').value=new Date().toISOString().slice(0,10);
-  $('fBetrag').value='';$('fSeriennummer').value='';$('fNotizen').value='';
-  $('fGarantie').value=String(settings.defaultMonths);
-  $('fKategorie').value='Elektronik';
-  toggleCustomMonths();
-  resetBox('beleg');resetBox('produkt');
-  updateAiBtn();
-  openSheet('captureSheet');
-}
-function resetBox(which){
-  const box=which==='beleg'?$('belegBox'):$('produktBox');
-  box.classList.remove('has-img');
-  box.innerHTML=which==='beleg'
-    ?'<div class="ph">🧾</div><div class="ph-t">Quittung fotografieren</div><div class="ph-s">oder aus der Galerie wählen</div>'
-    :'<div class="ph">📷</div><div class="ph-t">Foto vom Produkt</div><div class="ph-s">z.B. die neue Kaffeemaschine</div>';
-}
-function showImgInBox(which,dataUrl){
-  const box=which==='beleg'?$('belegBox'):$('produktBox');
-  box.classList.add('has-img');
-  box.innerHTML=`<img src="${dataUrl}"><div class="img-actions"><button onclick="event.stopPropagation();removeImg('${which}')">🗑️</button></div>`;
-}
-function removeImg(which){
-  if(which==='beleg')draft.belegBild=null;else draft.produktBild=null;
-  resetBox(which);updateAiBtn();
-}
-function pickImage(which){pickTarget=which;$('imgInput').value='';$('imgInput').click();}
-$('imgInput').addEventListener('change',async e=>{
-  const f=e.target.files[0];if(!f)return;
-  const data=await compressImage(f, pickTarget==='beleg'?1400:1000);
-  if(pickTarget==='beleg'){draft.belegBild=data;showImgInBox('beleg',data);}
-  else{draft.produktBild=data;showImgInBox('produkt',data);}
-  updateAiBtn();
-});
-function updateAiBtn(){
-  const has=!!draft.belegBild;
-  $('aiBtn').disabled=!has;
-  $('aiNote').textContent=!has?'Zuerst Quittung fotografieren, dann automatisch auslesen.'
-    :(settings.apiKey?'Liest Händler, Produkt, Datum und Betrag automatisch aus.':'API-Key in den Einstellungen nötig. Oder Felder manuell ausfüllen.');
-}
+/* ============ CAPTURE ============ */
+function boxContent(which){return which==='beleg'?`<div class="ci">${svg('camera')}</div><div class="ct">Beleg fotografieren</div><div class="cs">oder aus der Galerie wählen</div>`:`<div class="ci">${svg('image')}</div><div class="ct">Foto vom Produkt</div><div class="cs">optional, z.B. das Gerät selbst</div>`;}
+function resetBox(which){const b=which==='beleg'?$('belegBox'):$('produktBox');b.classList.remove('has-img');b.innerHTML=boxContent(which);}
+function showImgInBox(which,url){const b=which==='beleg'?$('belegBox'):$('produktBox');b.classList.add('has-img');b.innerHTML=`<img src="${url}"><div class="img-actions"><button onclick="event.stopPropagation();removeImg('${which}')">${svg('trash','ic-sm')}</button></div>`;}
+function removeImg(which){if(which==='beleg')draft.belegBild=null;else draft.produktBild=null;resetBox(which);updateScanBtn();}
+function openCapture(){draft={id:null,belegBild:null,produktBild:null};lastOcrText='';$('captureTitle').textContent='Beleg erfassen';['fProdukt','fHaendler','fBetrag','fSeriennummer','fNotizen','fCustomMonths'].forEach(id=>{$(id).value='';$(id).closest('.field').classList.remove('auto');});$('fKaufdatum').value=new Date().toISOString().slice(0,10);$('fKaufdatum').closest('.field').classList.remove('auto');$('fGarantie').value=String(settings.defaultMonths);$('fKategorie').value='Elektronik';toggleCustomMonths();resetBox('beleg');resetBox('produkt');$('ocrBox').classList.remove('show');$('ocrBox').open=false;$('scanProg').classList.remove('on');updateScanBtn();openSheet('captureSheet');}
 function toggleCustomMonths(){$('customMonthsField').style.display=$('fGarantie').value==='custom'?'block':'none';}
+function pickImage(which){pickTarget=which;$('imgInput').value='';$('imgInput').click();}
+$('imgInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;const data=await compressImage(f,pickTarget==='beleg'?1500:1100);if(pickTarget==='beleg'){draft.belegBild=data;showImgInBox('beleg',data);}else{draft.produktBild=data;showImgInBox('produkt',data);}updateScanBtn();});
+function updateScanBtn(){const has=!!draft.belegBild;$('scanBtn').disabled=!has;$('scanNote').textContent=has?'Läuft direkt auf deinem Gerät, kostenlos und ohne Konto.':'Zuerst Beleg fotografieren, dann automatisch auslesen.';}
+function setAuto(id,val){const el=$(id);el.value=val;const f=el.closest('.field');if(f){f.classList.add('auto');setTimeout(()=>f.classList.remove('auto'),2600);}}
 
-/* ================= KI PARSING ================= */
-async function parseWithAI(){
-  if(!draft.belegBild)return toast('Zuerst Quittung fotografieren');
-  if(!settings.apiKey){toast('API-Key in Einstellungen fehlt');openSettings();return;}
-  const btn=$('aiBtn');const orig=btn.innerHTML;
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Lese Quittung...';
-  try{
-    const b64=draft.belegBild.split(',')[1];
-    const prompt=`Analysiere dieses Bild einer Kassenquittung oder Rechnung. Gib AUSSCHLIESSLICH gültiges JSON zurück, ohne Markdown, ohne Erklärung, in dieser Form:
-{"haendler":string,"kaufdatum":"YYYY-MM-DD","waehrung":string,"produkte":[{"produkt":string,"betrag":number,"kategorie":string,"seriennummer":string oder null}]}
-Regeln: Erfasse jede relevante gekaufte Warenposition als eigenes Objekt in "produkte" (keine Rabatte, kein Pfand, keine Summen- oder Zwischensummenzeile). Wenn nur ein Artikel vorhanden ist, enthält "produkte" genau ein Objekt. kategorie eine von: Elektronik, Haushalt, Werkzeug, Möbel, Kleidung, Fahrzeug, Sonstiges. Nicht erkennbare Werte = null.`;
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'x-api-key':settings.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
-      body:JSON.stringify({
-        model:settings.model,max_tokens:600,
-        messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
-          {type:'text',text:prompt}
-        ]}]
-      })
-    });
-    if(!resp.ok){const t=await resp.text();throw new Error('API '+resp.status+': '+t.slice(0,140));}
-    const j=await resp.json();
-    let txt=(j.content&&j.content[0]&&j.content[0].text||'').trim();
-    const m=txt.match(/\{[\s\S]*\}/);if(m)txt=m[0];
-    const d=JSON.parse(txt);
-    let produkte=Array.isArray(d.produkte)?d.produkte.filter(p=>p&&p.produkt):null;
-    if(!produkte||!produkte.length)produkte=[{produkt:d.produkt,betrag:d.betrag,kategorie:d.kategorie,seriennummer:d.seriennummer}];
-    const shared={
-      haendler:d.haendler||'',
-      kaufdatum:(d.kaufdatum&&/^\d{4}-\d{2}-\d{2}$/.test(d.kaufdatum))?d.kaufdatum:$('fKaufdatum').value,
-      waehrung:d.waehrung||settings.currency
-    };
-    if(produkte.length>1){
-      openMultiChooser(produkte,shared);
-    }else{
-      const p=produkte[0];
-      if(p.produkt)$('fProdukt').value=p.produkt;
-      if(shared.haendler)$('fHaendler').value=shared.haendler;
-      $('fKaufdatum').value=shared.kaufdatum;
-      if(p.betrag!=null)$('fBetrag').value=p.betrag;
-      if(p.kategorie){const opt=[...$('fKategorie').options].find(o=>o.value===p.kategorie);if(opt)$('fKategorie').value=p.kategorie;}
-      if(p.seriennummer)$('fSeriennummer').value=p.seriennummer;
-      draft._waehrung=shared.waehrung;
-      toast('✨ Quittung ausgelesen, bitte prüfen');
-    }
-  }catch(err){
-    console.error(err);
-    toast('Fehler: '+(err.message||'unbekannt'));
-  }finally{
-    btn.disabled=false;btn.innerHTML=orig;
-  }
+/* ============ ON-DEVICE OCR ============ */
+let tessLoading=null;
+function loadTesseract(){if(window.Tesseract)return Promise.resolve();if(tessLoading)return tessLoading;tessLoading=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=res;s.onerror=()=>rej(new Error('Texterkennung konnte nicht geladen werden'));document.head.appendChild(s);});return tessLoading;}
+function scanProg(p,label){$('scanProg').classList.add('on');$('scanBar').style.width=Math.round((p||0)*100)+'%';if(label)$('scanLbl').textContent=label;}
+async function scanReceipt(){if(!draft.belegBild)return;const btn=$('scanBtn');btn.disabled=true;const orig=btn.innerHTML;btn.innerHTML='<span class="spinner"></span> Wird gelesen';scanProg(0.02,'Texterkennung wird vorbereitet');try{await loadTesseract();scanProg(0.08,'Beleg wird gelesen');const res=await Tesseract.recognize(draft.belegBild,'deu+eng',{logger:m=>{if(m.status==='recognizing text')scanProg(0.1+m.progress*0.9,'Beleg wird gelesen '+Math.round(m.progress*100)+'%');}});const text=(res&&res.data&&res.data.text)||'';parseReceiptText(text);}catch(err){console.error(err);toast(err.message||'Auslesen fehlgeschlagen');}finally{btn.disabled=false;btn.innerHTML=orig;$('scanProg').classList.remove('on');}}
+
+function normDate(str){const m=str.match(/(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{2,4})/);if(m){let d=+m[1],mo=+m[2],y=+m[3];if(y<100)y+=2000;if(d>=1&&d<=31&&mo>=1&&mo<=12&&y>=2000&&y<=2100)return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}const iso=str.match(/(20\d{2})-(\d{2})-(\d{2})/);if(iso)return iso[0];return null;}
+function amountsIn(str){return (str.match(/\d{1,5}[.,]\d{2}/g)||[]).map(s=>parseFloat(s.replace(',','.')));}
+function parseReceiptText(text){lastOcrText=text;const lines=text.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  let date=null;for(const l of lines){if(/datum|kauf|date/i.test(l)){date=normDate(l);if(date)break;}}if(!date)date=normDate(text);
+  let cur=/\bCHF\b|\bFr\.?\b/i.test(text)?'CHF':/\bEUR\b|€/.test(text)?'EUR':/\bUSD\b|\$/.test(text)?'USD':settings.currency;
+  let total=null;for(const l of lines){if(/total|summe|zu\s*zahlen|betrag|total\s*chf|endbetrag/i.test(l)&&!/subtotal|zwischensumme|mwst/i.test(l)){const a=amountsIn(l);if(a.length)total=a[a.length-1];}}
+  if(total==null){const all=amountsIn(text);if(all.length)total=Math.max.apply(null,all);}
+  let merchant='';for(const l of lines.slice(0,6)){const clean=l.replace(/[^\wÄÖÜäöüàéè&.\- ]/g,'').trim();if(/[A-Za-zÄÖÜäöü]{3,}/.test(clean)&&!/\d{1,2}[.\-\/]\d/.test(clean)&&amountsIn(clean).length===0&&clean.length<=34){merchant=clean;break;}}
+  const items=[],seen=new Set();
+  for(const l of lines){if(/total|summe|subtotal|zwischensumme|mwst|tax|rundung|bar|karte|card|change|rückgeld|trinkgeld|betrag|saldo|kasse/i.test(l))continue;const m=l.match(/^(.*?[A-Za-zÄÖÜäöü].*?)\s+(\d{1,4}[.,]\d{2})\s*[A-Za-z%]{0,3}$/);if(m){const name=m[1].replace(/\s{2,}/g,' ').replace(/^\d+\s*x?\s*/i,'').trim();const price=parseFloat(m[2].replace(',','.'));if(name.length>=3&&name.length<=40&&price>0&&price<100000&&!seen.has(name.toLowerCase())){seen.add(name.toLowerCase());items.push({produkt:name,betrag:price,kategorie:'Sonstiges',seriennummer:null});}}}
+  applyOcr({merchant,date,total,cur,items});
+}
+function applyOcr({merchant,date,total,cur,items}){
+  $('ocrText').textContent=lastOcrText||'(kein Text erkannt)';$('ocrBox').classList.add('show');
+  const shared={haendler:merchant||'',kaufdatum:date||$('fKaufdatum').value,waehrung:cur||settings.currency};
+  let good=items.filter(it=>total==null||Math.abs(it.betrag-total)>0.001);
+  if(good.length>1){draft._waehrung=shared.waehrung;openMultiChooser(good,shared);toast(good.length+' Positionen erkannt');return;}
+  if(shared.haendler)setAuto('fHaendler',shared.haendler);
+  setAuto('fKaufdatum',shared.kaufdatum);
+  if(total!=null)setAuto('fBetrag',total.toFixed(2));
+  if(good.length===1)setAuto('fProdukt',good[0].produkt);
+  draft._waehrung=shared.waehrung;
+  toast('Beleg gelesen, bitte prüfen');
 }
 
-/* ================= SAVE ================= */
-async function saveItem(){
-  const produkt=$('fProdukt').value.trim();
-  const kaufdatum=$('fKaufdatum').value;
-  if(!produkt){toast('Bitte Produkt angeben');return;}
-  if(!kaufdatum){toast('Bitte Kaufdatum angeben');return;}
-  let months=$('fGarantie').value;
-  if(months==='custom')months=parseInt($('fCustomMonths').value)||24;else months=parseInt(months);
-  const it={
-    id:draft.id||uid(),
-    produkt,
-    haendler:$('fHaendler').value.trim(),
-    kaufdatum,
-    betrag:$('fBetrag').value?Number($('fBetrag').value):null,
-    waehrung:draft._waehrung||settings.currency,
-    garantieMonate:months,
-    kategorie:$('fKategorie').value,
-    seriennummer:$('fSeriennummer').value.trim(),
-    notizen:$('fNotizen').value.trim(),
-    belegBild:draft.belegBild,
-    produktBild:draft.produktBild,
-    archiviert:false,
-    erstelltAm:draft.erstelltAm||new Date().toISOString()
-  };
-  await dbPut(it);
-  const idx=items.findIndex(x=>x.id===it.id);
-  if(idx>=0)items[idx]=it;else items.push(it);
-  closeSheet('captureSheet');
-  renderHome();
-  toast(draft.id?'Aktualisiert':'Garantie gespeichert 🛡️');
-}
-
-/* ================= DETAIL ================= */
-function openDetail(id){
-  const it=items.find(x=>x.id===id);if(!it)return;
-  const st=statusOf(it),d=daysLeft(it);
-  const col=st==='green'?'var(--green)':st==='amber'?'var(--amber)':'var(--red)';
-  const cdText=d<0?'abgelaufen seit '+Math.abs(d)+' Tagen':d===0?'läuft heute ab':'Tage Garantie übrig';
-  const cdBig=d<0?'⌛':d;
-  const hero=it.produktBild?`<img src="${it.produktBild}">`:`<div class="no-img">${catEmoji(it.kategorie)}</div>`;
-  let docs='';
-  if(it.belegBild||it.produktBild){
-    docs='<div class="doc-imgs">';
-    if(it.belegBild)docs+=`<div class="d" onclick="viewFull('${it.id}','beleg')"><img src="${it.belegBild}"><div class="cap">🧾 Beleg</div></div>`;
-    if(it.produktBild)docs+=`<div class="d" onclick="viewFull('${it.id}','produkt')"><img src="${it.produktBild}"><div class="cap">📷 Produkt</div></div>`;
-    docs+='</div>';
-  }
-  $('detailBody').innerHTML=`
-    <div class="detail-hero">${hero}</div>
-    <h2 style="font-size:21px;margin-bottom:3px">${esc(it.produkt)}</h2>
-    <p style="color:var(--muted);margin:0 0 16px;font-size:14px">${esc(it.haendler||'')} ${it.betrag?'· '+money(it):''}</p>
-    <div class="countdown" style="background:${col}">
-      <div class="big">${cdBig}</div><div class="lbl">${cdText}</div>
-    </div>
-    <div class="info-grid">
-      <div class="info-row"><span class="k">Kaufdatum</span><span class="v">${fmtDate(it.kaufdatum)}</span></div>
-      <div class="info-row"><span class="k">Garantie</span><span class="v">${it.garantieMonate} Monate</span></div>
-      <div class="info-row"><span class="k">Läuft ab am</span><span class="v" style="color:${col}">${fmtDate(ablauf(it).toISOString())}</span></div>
-      <div class="info-row"><span class="k">Kategorie</span><span class="v">${catEmoji(it.kategorie)} ${it.kategorie}</span></div>
-      ${it.seriennummer?`<div class="info-row"><span class="k">Seriennummer</span><span class="v">${esc(it.seriennummer)}</span></div>`:''}
-      ${it.notizen?`<div class="info-row"><span class="k">Notiz</span><span class="v" style="max-width:60%">${esc(it.notizen)}</span></div>`:''}
-    </div>
-    ${docs}
-    <button class="btn" style="margin-bottom:10px" onclick="exportIcs('${it.id}')">📅 In Kalender eintragen (mit Erinnerung)</button>
-    <div class="row2" style="gap:10px">
-      <button class="btn btn-ghost btn-sm" onclick="editItem('${it.id}')">✏️ Bearbeiten</button>
-      <button class="btn btn-ghost btn-sm" onclick="toggleArchive('${it.id}')">${it.archiviert?'↩️ Reaktivieren':'📦 Archivieren'}</button>
-    </div>
-    <button class="btn btn-danger btn-sm" style="margin-top:10px" onclick="deleteItem('${it.id}')">🗑️ Löschen</button>
-  `;
-  openSheet('detailSheet');
-}
-function viewFull(id,which){
-  const it=items.find(x=>x.id===id);if(!it)return;
-  const src=which==='beleg'?it.belegBild:it.produktBild;
-  const w=window.open('');if(w)w.document.write(`<body style="margin:0;background:#000;display:grid;place-items:center;min-height:100vh"><img src="${src}" style="max-width:100%"></body>`);
-}
-function editItem(id){
-  const it=items.find(x=>x.id===id);if(!it)return;
-  closeSheet('detailSheet');
-  draft={id:it.id,belegBild:it.belegBild,produktBild:it.produktBild,erstelltAm:it.erstelltAm,_waehrung:it.waehrung};
-  $('captureTitle').textContent='Garantie bearbeiten';
-  $('fProdukt').value=it.produkt;$('fHaendler').value=it.haendler||'';
-  $('fKaufdatum').value=it.kaufdatum;$('fBetrag').value=it.betrag||'';
-  $('fSeriennummer').value=it.seriennummer||'';$('fNotizen').value=it.notizen||'';
-  $('fKategorie').value=it.kategorie||'Elektronik';
-  const std=['12','24','36','60'];
-  if(std.includes(String(it.garantieMonate))){$('fGarantie').value=String(it.garantieMonate);}
-  else{$('fGarantie').value='custom';$('fCustomMonths').value=it.garantieMonate;}
-  toggleCustomMonths();
-  if(it.belegBild)showImgInBox('beleg',it.belegBild);else resetBox('beleg');
-  if(it.produktBild)showImgInBox('produkt',it.produktBild);else resetBox('produkt');
-  updateAiBtn();
-  openSheet('captureSheet');
-}
-async function toggleArchive(id){
-  const it=items.find(x=>x.id===id);if(!it)return;
-  it.archiviert=!it.archiviert;await dbPut(it);
-  closeSheet('detailSheet');renderHome();renderArchive();
-  toast(it.archiviert?'Archiviert 📦':'Reaktiviert');
-}
-async function deleteItem(id){
-  if(!confirm('Diese Garantie wirklich löschen?'))return;
-  await dbDel(id);items=items.filter(x=>x.id!==id);
-  closeSheet('detailSheet');renderHome();renderArchive();renderCalendar();
-  toast('Gelöscht');
-}
-
-/* ================= ICS EXPORT ================= */
-function icsForItem(it){
-  const a=ablauf(it);
-  const dt=a.getFullYear()+String(a.getMonth()+1).padStart(2,'0')+String(a.getDate()).padStart(2,'0');
-  const uidv=it.id+'@garantietresor';
-  return ['BEGIN:VEVENT',
-    'UID:'+uidv,
-    'DTSTART;VALUE=DATE:'+dt,
-    'SUMMARY:Garantie läuft ab: '+it.produkt,
-    'DESCRIPTION:'+(it.haendler?'Gekauft bei '+it.haendler+'. ':'')+'Garantie '+it.garantieMonate+' Monate.',
-    'BEGIN:VALARM','TRIGGER:-P7D','ACTION:DISPLAY','DESCRIPTION:Garantie läuft in 7 Tagen ab: '+it.produkt,'END:VALARM',
-    'END:VEVENT'].join('\r\n');
-}
-function downloadIcs(content,name){
-  const blob=new Blob(['BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//svmgLabs//GarantieTresor//DE\r\n'+content+'\r\nEND:VCALENDAR'],{type:'text/calendar'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-function exportIcs(id){const it=items.find(x=>x.id===id);if(!it)return;downloadIcs(icsForItem(it),'garantie-'+(it.produkt||'termin').replace(/\W+/g,'-').toLowerCase()+'.ics');toast('Kalender-Termin erstellt 📅');}
-function exportAllIcs(){const act=items.filter(i=>!i.archiviert);if(!act.length)return toast('Keine Fristen vorhanden');downloadIcs(act.map(icsForItem).join('\r\n'),'garantie-tresor-alle.ics');toast(act.length+' Termine exportiert 📅');}
-
-/* ================= SETTINGS ================= */
-function openSettings(){
-  $('setApiKey').value=settings.apiKey;
-  $('setModel').value=settings.model;
-  $('setDefaultMonths').value=String(settings.defaultMonths);
-  $('setCurrency').value=settings.currency;
-  $('setWarnDays').value=String(settings.warnDays);
-  $('notifyState').textContent=('Notification'in window&&Notification.permission==='granted')?'✓ Aktiv':'›';
-  openSheet('settingsSheet');
-}
-function saveSettings(){
-  settings.apiKey=$('setApiKey').value.trim();
-  settings.model=$('setModel').value;
-  settings.defaultMonths=parseInt($('setDefaultMonths').value);
-  settings.currency=$('setCurrency').value;
-  settings.warnDays=parseInt($('setWarnDays').value);
-  localStorage.setItem('gt_settings',JSON.stringify(settings));
-  closeSheet('settingsSheet');renderHome();
-  toast('Einstellungen gespeichert');
-}
-function loadSettings(){
-  try{const s=JSON.parse(localStorage.getItem('gt_settings'));if(s)settings={...settings,...s};}catch(e){}
-}
-
-/* ================= NOTIFICATIONS ================= */
-async function requestNotify(){
-  if(!('Notification'in window))return toast('Nicht unterstützt auf diesem Gerät');
-  const p=await Notification.requestPermission();
-  $('notifyState').textContent=p==='granted'?'✓ Aktiv':'›';
-  if(p==='granted'){toast('Benachrichtigungen aktiv');checkExpiring(true);}
-}
-function checkExpiring(force){
-  if(!('Notification'in window)||Notification.permission!=='granted')return;
-  const soon=items.filter(i=>!i.archiviert&&daysLeft(i)>=0&&daysLeft(i)<=settings.warnDays);
-  if(soon.length){
-    const last=localStorage.getItem('gt_lastnotify');const today=new Date().toDateString();
-    if(force||last!==today){
-      new Notification('Garantie Tresor',{body:soon.length+' Garantie'+(soon.length>1?'n laufen':' läuft')+' bald ab. Tippe zum Ansehen.',icon:'🛡️'});
-      localStorage.setItem('gt_lastnotify',today);
-    }
-  }
-}
-
-/* ================= BACKUP ================= */
-function exportBackup(){
-  const blob=new Blob([JSON.stringify({items,exported:new Date().toISOString()},null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='garantie-tresor-backup.json';a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Backup erstellt');
-}
-async function importBackup(e){
-  const f=e.target.files[0];if(!f)return;
-  try{
-    const data=JSON.parse(await f.text());
-    if(!Array.isArray(data.items))throw 0;
-    for(const it of data.items){if(!it.id)it.id=uid();await dbPut(it);}
-    items=await dbAll();renderHome();closeSheet('settingsSheet');
-    toast(data.items.length+' Einträge importiert');
-  }catch(err){toast('Ungültige Backup-Datei');}
-}
-async function clearAll(){
-  if(!confirm('Wirklich ALLE Garantien und Bilder unwiderruflich löschen?'))return;
-  await dbClear();items=[];renderHome();renderArchive();renderCalendar();closeSheet('settingsSheet');
-  toast('Alle Daten gelöscht');
-}
-
-/* ================= DEMO ================= */
-async function loadDemo(){
-  const today=new Date();
-  const mk=(monthsAgo,prod,hand,betrag,gar,kat,archiv)=>{
-    const d=new Date(today);d.setMonth(d.getMonth()-monthsAgo);
-    return{id:uid(),produkt:prod,haendler:hand,kaufdatum:d.toISOString().slice(0,10),betrag,waehrung:'CHF',garantieMonate:gar,kategorie:kat,seriennummer:'',notizen:'',belegBild:null,produktBild:null,archiviert:!!archiv,erstelltAm:new Date().toISOString()};
-  };
-  const demo=[
-    mk(1,"Kaffeemaschine De'Longhi Dinamica","MediaMarkt",699,24,"Haushalt"),
-    mk(23,"iPhone 15 Pro","Digitec",1199,24,"Elektronik"),
-    mk(5,"Bosch Akkuschrauber","Hornbach",149,36,"Werkzeug"),
-    mk(11,"Sonos Beam Soundbar","Fust",549,24,"Elektronik"),
-    mk(30,"Weber Gasgrill","Do it + Garden",899,60,"Haushalt",true)
-  ];
-  for(const it of demo)await dbPut(it);
-  items=await dbAll();renderHome();closeSheet('settingsSheet');
-  toast('Demo-Daten geladen 🧪');
-}
-
-/* ================= MULTI PRODUKT ================= */
+/* ============ MULTI ============ */
 let multiProducts=[],multiShared={};
 function catOptions(sel){return ['Elektronik','Haushalt','Werkzeug','Möbel','Kleidung','Fahrzeug','Sonstiges'].map(c=>`<option ${c===sel?'selected':''}>${c}</option>`).join('');}
-function openMultiChooser(prods,shared){
-  multiProducts=prods.map(p=>({produkt:p.produkt||'',betrag:(p.betrag??''),kategorie:p.kategorie||'Sonstiges',seriennummer:p.seriennummer||'',include:true}));
-  multiShared=shared;
-  $('mHaendler').value=shared.haendler||'';
-  $('mKaufdatum').value=shared.kaufdatum;
-  $('mGarantie').value=String(settings.defaultMonths);
-  $('multiHint').innerHTML='<b>'+multiProducts.length+' Produkte</b> auf dem Beleg erkannt. Wähle, welche du je als eigene Garantie speichern willst.';
-  renderMultiList();
-  openSheet('multiSheet');
-}
-function renderMultiList(){
-  $('multiList').innerHTML=multiProducts.map((p,i)=>`
-    <div class="card" style="display:block;padding:13px;margin-bottom:10px">
-      <label style="display:flex;align-items:center;gap:9px;margin-bottom:9px;font-weight:700;font-size:14px">
-        <input type="checkbox" style="width:19px;height:19px;accent-color:var(--teal)" ${p.include?'checked':''} onchange="multiProducts[${i}].include=this.checked">
-        Produkt ${i+1}
-      </label>
-      <input class="m-in" style="margin-bottom:7px" value="${esc(p.produkt)}" oninput="multiProducts[${i}].produkt=this.value" placeholder="Produktname">
-      <div class="row2">
-        <input class="m-in" type="number" step="0.01" value="${p.betrag}" oninput="multiProducts[${i}].betrag=this.value" placeholder="Betrag">
-        <select class="m-in" onchange="multiProducts[${i}].kategorie=this.value">${catOptions(p.kategorie)}</select>
-      </div>
-    </div>`).join('');
-}
-async function saveMultiple(){
-  const chosen=multiProducts.filter(p=>p.include&&(p.produkt||'').trim());
-  if(!chosen.length){toast('Nichts ausgewählt');return;}
-  const months=parseInt($('mGarantie').value)||settings.defaultMonths;
-  const haendler=$('mHaendler').value.trim();
-  const kaufdatum=$('mKaufdatum').value||new Date().toISOString().slice(0,10);
-  for(const p of chosen){
-    const it={id:uid(),produkt:p.produkt.trim(),haendler,kaufdatum,
-      betrag:p.betrag?Number(p.betrag):null,waehrung:multiShared.waehrung||settings.currency,
-      garantieMonate:months,kategorie:p.kategorie||'Sonstiges',seriennummer:(p.seriennummer||'').trim(),
-      notizen:'',belegBild:draft.belegBild,produktBild:null,archiviert:false,erstelltAm:new Date().toISOString()};
-    await dbPut(it);items.push(it);
-  }
-  closeSheet('multiSheet');closeSheet('captureSheet');renderHome();
-  toast(chosen.length+' Garantien gespeichert 🛡️');
-}
-function fallbackSingle(){
-  const p=multiProducts[0]||{};
-  $('fProdukt').value=p.produkt||'';
-  $('fHaendler').value=multiShared.haendler||'';
-  $('fKaufdatum').value=multiShared.kaufdatum||$('fKaufdatum').value;
-  $('fBetrag').value=p.betrag||'';
-  if(p.kategorie){const opt=[...$('fKategorie').options].find(o=>o.value===p.kategorie);if(opt)$('fKategorie').value=p.kategorie;}
-  draft._waehrung=multiShared.waehrung;
-  closeSheet('multiSheet');
-}
+function openMultiChooser(prods,shared){multiProducts=prods.map(p=>({produkt:p.produkt||'',betrag:(p.betrag??''),kategorie:p.kategorie||'Sonstiges',seriennummer:p.seriennummer||'',include:true}));multiShared=shared;$('mHaendler').value=shared.haendler||'';$('mKaufdatum').value=shared.kaufdatum;$('mGarantie').value=String(settings.defaultMonths);$('multiHint').innerHTML='<span>'+svg('receipt','ic-sm')+'</span><span><b>'+multiProducts.length+' Positionen</b> auf dem Beleg erkannt. Wähle, welche je eine eigene Garantie werden.</span>';renderMultiList();openSheet('multiSheet');}
+function renderMultiList(){$('multiList').innerHTML=multiProducts.map((p,i)=>`<div class="card" style="display:block;padding:13px;margin-bottom:10px"><label style="display:flex;align-items:center;gap:9px;margin-bottom:9px;font-weight:650;font-size:14px"><input type="checkbox" style="width:19px;height:19px;accent-color:var(--accent)" ${p.include?'checked':''} onchange="multiProducts[${i}].include=this.checked"> Position ${i+1}</label><input class="m-in" style="margin-bottom:7px" value="${esc(p.produkt)}" oninput="multiProducts[${i}].produkt=this.value" placeholder="Produktname"><div class="row2"><input class="m-in" type="number" step="0.01" value="${p.betrag}" oninput="multiProducts[${i}].betrag=this.value" placeholder="Betrag"><select class="m-in" onchange="multiProducts[${i}].kategorie=this.value">${catOptions(p.kategorie)}</select></div></div>`).join('');}
+async function saveMultiple(){const chosen=multiProducts.filter(p=>p.include&&(p.produkt||'').trim());if(!chosen.length){toast('Nichts ausgewählt');return;}const months=parseInt($('mGarantie').value)||settings.defaultMonths;const haendler=$('mHaendler').value.trim();const kaufdatum=$('mKaufdatum').value||new Date().toISOString().slice(0,10);for(const p of chosen){const it={id:uid(),produkt:p.produkt.trim(),haendler,kaufdatum,betrag:p.betrag?Number(p.betrag):null,waehrung:multiShared.waehrung||settings.currency,garantieMonate:months,kategorie:p.kategorie||'Sonstiges',seriennummer:(p.seriennummer||'').trim(),notizen:'',belegBild:draft.belegBild,produktBild:null,archiviert:false,erstelltAm:new Date().toISOString()};await dbPut(it);items.push(it);}closeSheet('multiSheet');closeSheet('captureSheet');renderHome();toast(chosen.length+' Garantien gespeichert');}
+function fallbackSingle(){const p=multiProducts[0]||{};setAuto('fProdukt',p.produkt||'');setAuto('fHaendler',multiShared.haendler||'');setAuto('fKaufdatum',multiShared.kaufdatum||$('fKaufdatum').value);if(p.betrag)setAuto('fBetrag',Number(p.betrag).toFixed(2));if(p.kategorie){const o=[...$('fKategorie').options].find(x=>x.value===p.kategorie);if(o)$('fKategorie').value=p.kategorie;}draft._waehrung=multiShared.waehrung;closeSheet('multiSheet');}
 
-/* ================= PWA (Icon + Manifest) ================= */
-function pngFromSvg(svg,size){
-  return new Promise((res,rej)=>{
-    const img=new Image();
-    img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=size;c.getContext('2d').drawImage(img,0,0,size,size);res(c.toDataURL('image/png'));};
-    img.onerror=rej;
-    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
-  });
-}
+/* ============ SAVE ============ */
+async function saveItem(){const produkt=$('fProdukt').value.trim(),kaufdatum=$('fKaufdatum').value;if(!produkt){toast('Bitte Produkt angeben');return;}if(!kaufdatum){toast('Bitte Kaufdatum angeben');return;}let m=$('fGarantie').value;m=m==='custom'?(parseInt($('fCustomMonths').value)||24):parseInt(m);const it={id:draft.id||uid(),produkt,haendler:$('fHaendler').value.trim(),kaufdatum,betrag:$('fBetrag').value?Number($('fBetrag').value):null,waehrung:draft._waehrung||settings.currency,garantieMonate:m,kategorie:$('fKategorie').value,seriennummer:$('fSeriennummer').value.trim(),notizen:$('fNotizen').value.trim(),belegBild:draft.belegBild,produktBild:draft.produktBild,archiviert:false,erstelltAm:draft.erstelltAm||new Date().toISOString()};await dbPut(it);const idx=items.findIndex(x=>x.id===it.id);if(idx>=0)items[idx]=it;else items.push(it);closeSheet('captureSheet');renderHome();toast(draft.id?'Aktualisiert':'Garantie gespeichert');}
+
+/* ============ DETAIL ============ */
+function openDetail(id){const it=items.find(x=>x.id===id);if(!it)return;const st=statusOf(it),d=daysLeft(it),col=st==='ok'?'var(--ok)':st==='warn'?'var(--warn)':'var(--bad)';
+  const totalDays=Math.max(1,Math.round((ablauf(it)-new Date(it.kaufdatum))/86400000));const elapsed=Math.min(100,Math.max(0,Math.round((totalDays-Math.max(0,d))/totalDays*100)));
+  const cdBig=d<0?'0':d,cdLbl=d<0?'seit '+Math.abs(d)+' Tagen abgelaufen':d===0?'läuft heute ab':'Tage übrig';
+  const hero=it.produktBild?`<img src="${it.produktBild}">`:`<div class="noimg">${svg(catIcon[it.kategorie]||'package')}</div>`;
+  let docs='';if(it.belegBild||it.produktBild){docs='<div class="doc-imgs">';if(it.belegBild)docs+=`<div class="d" onclick="viewFull('${it.id}','beleg')"><img src="${it.belegBild}"><div class="cap">${svg('receipt','ic-sm')} Beleg</div></div>`;if(it.produktBild)docs+=`<div class="d" onclick="viewFull('${it.id}','produkt')"><img src="${it.produktBild}"><div class="cap">${svg('image','ic-sm')} Produkt</div></div>`;docs+='</div>';}
+  $('detailBody').innerHTML=`<div class="d-hero">${hero}</div><h2 class="d-title">${esc(it.produkt)}</h2><p class="d-sub">${esc(it.haendler||'')}${it.betrag?' · '+money(it):''}</p>
+  <div class="cd"><div class="top"><div class="big" style="color:${col}">${cdBig}<small>${cdLbl}</small></div>${pillHtml(it)}</div><div class="prog"><i style="width:${elapsed}%;background:${col}"></i></div><div class="meta"><span>${fmtDate(it.kaufdatum)}</span><span>${fmtDate(ablauf(it).toISOString())}</span></div></div>
+  <div class="info-grid"><div class="info-row"><span class="k">Kaufdatum</span><span class="v">${fmtDate(it.kaufdatum)}</span></div><div class="info-row"><span class="k">Garantie</span><span class="v">${it.garantieMonate} Monate</span></div><div class="info-row"><span class="k">Läuft ab</span><span class="v" style="color:${col}">${fmtDate(ablauf(it).toISOString())}</span></div><div class="info-row"><span class="k">Kategorie</span><span class="v">${it.kategorie}</span></div>${it.seriennummer?`<div class="info-row"><span class="k">Seriennummer</span><span class="v">${esc(it.seriennummer)}</span></div>`:''}${it.notizen?`<div class="info-row"><span class="k">Notiz</span><span class="v" style="max-width:62%">${esc(it.notizen)}</span></div>`:''}</div>
+  ${docs}
+  <button class="btn" style="margin-bottom:9px" onclick="exportIcs('${it.id}')">${svg('calendar')} In Kalender eintragen</button>
+  <div class="row2" style="gap:9px"><button class="btn btn-ghost btn-sm" onclick="editItem('${it.id}')">${svg('edit','ic-sm')} Bearbeiten</button><button class="btn btn-ghost btn-sm" onclick="toggleArchive('${it.id}')">${svg('archive','ic-sm')} ${it.archiviert?'Reaktivieren':'Archivieren'}</button></div>
+  <button class="btn btn-danger btn-sm" style="margin-top:9px" onclick="deleteItem('${it.id}')">${svg('trash','ic-sm')} Löschen</button>`;
+  openSheet('detailSheet');}
+function viewFull(id,which){const it=items.find(x=>x.id===id);if(!it)return;const src=which==='beleg'?it.belegBild:it.produktBild;const w=window.open('');if(w)w.document.write(`<body style="margin:0;background:#0c1414;display:grid;place-items:center;min-height:100vh"><img src="${src}" style="max-width:100%"></body>`);}
+function editItem(id){const it=items.find(x=>x.id===id);if(!it)return;closeSheet('detailSheet');draft={id:it.id,belegBild:it.belegBild,produktBild:it.produktBild,erstelltAm:it.erstelltAm,_waehrung:it.waehrung};$('captureTitle').textContent='Garantie bearbeiten';$('fProdukt').value=it.produkt;$('fHaendler').value=it.haendler||'';$('fKaufdatum').value=it.kaufdatum;$('fBetrag').value=it.betrag||'';$('fSeriennummer').value=it.seriennummer||'';$('fNotizen').value=it.notizen||'';$('fKategorie').value=it.kategorie||'Elektronik';['fProdukt','fHaendler','fKaufdatum','fBetrag','fSeriennummer','fNotizen'].forEach(x=>$(x).closest('.field').classList.remove('auto'));const std=['12','24','36','60'];if(std.includes(String(it.garantieMonate)))$('fGarantie').value=String(it.garantieMonate);else{$('fGarantie').value='custom';$('fCustomMonths').value=it.garantieMonate;}toggleCustomMonths();if(it.belegBild)showImgInBox('beleg',it.belegBild);else resetBox('beleg');if(it.produktBild)showImgInBox('produkt',it.produktBild);else resetBox('produkt');$('ocrBox').classList.remove('show');$('scanProg').classList.remove('on');updateScanBtn();openSheet('captureSheet');}
+async function toggleArchive(id){const it=items.find(x=>x.id===id);if(!it)return;it.archiviert=!it.archiviert;await dbPut(it);closeSheet('detailSheet');renderHome();renderArchive();toast(it.archiviert?'Archiviert':'Reaktiviert');}
+async function deleteItem(id){if(!confirm('Diese Garantie wirklich löschen?'))return;await dbDel(id);items=items.filter(x=>x.id!==id);closeSheet('detailSheet');renderHome();renderArchive();renderCalendar();toast('Gelöscht');}
+
+/* ============ ICS ============ */
+function icsForItem(it){const a=ablauf(it),dt=a.getFullYear()+String(a.getMonth()+1).padStart(2,'0')+String(a.getDate()).padStart(2,'0');return ['BEGIN:VEVENT','UID:'+it.id+'@garantietresor','DTSTART;VALUE=DATE:'+dt,'SUMMARY:Garantie läuft ab: '+it.produkt,'DESCRIPTION:'+(it.haendler?'Gekauft bei '+it.haendler+'. ':'')+'Garantie '+it.garantieMonate+' Monate.','BEGIN:VALARM','TRIGGER:-P7D','ACTION:DISPLAY','DESCRIPTION:Garantie läuft in 7 Tagen ab: '+it.produkt,'END:VALARM','END:VEVENT'].join('\r\n');}
+function downloadIcs(content,name){const blob=new Blob(['BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//svmgLabs//GarantieTresor//DE\r\n'+content+'\r\nEND:VCALENDAR'],{type:'text/calendar'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function exportIcs(id){const it=items.find(x=>x.id===id);if(!it)return;downloadIcs(icsForItem(it),'garantie-'+(it.produkt||'termin').replace(/\W+/g,'-').toLowerCase()+'.ics');toast('Kalender-Termin erstellt');}
+function exportAllIcs(){const act=items.filter(i=>!i.archiviert);if(!act.length)return toast('Keine Fristen vorhanden');downloadIcs(act.map(icsForItem).join('\r\n'),'garantie-tresor-alle.ics');toast(act.length+' Termine exportiert');}
+
+/* ============ SETTINGS / DATA ============ */
+function openSettings(){$('setDefaultMonths').value=String(settings.defaultMonths);$('setCurrency').value=settings.currency;$('setWarnDays').value=String(settings.warnDays);const on=('Notification'in window&&Notification.permission==='granted');$('notifyState').innerHTML=on?'Aktiv':svg('chevron');openSheet('settingsSheet');}
+function saveSettings(){settings.defaultMonths=parseInt($('setDefaultMonths').value);settings.currency=$('setCurrency').value;settings.warnDays=parseInt($('setWarnDays').value);localStorage.setItem('gt_settings',JSON.stringify(settings));closeSheet('settingsSheet');renderHome();toast('Gespeichert');}
+function loadSettings(){try{const s=JSON.parse(localStorage.getItem('gt_settings'));if(s)settings={...settings,...s};}catch(e){}}
+async function requestNotify(){if(!('Notification'in window))return toast('Nicht unterstützt');const p=await Notification.requestPermission();$('notifyState').innerHTML=p==='granted'?'Aktiv':svg('chevron');if(p==='granted'){toast('Benachrichtigungen aktiv');checkExpiring(true);}}
+function checkExpiring(force){if(!('Notification'in window)||Notification.permission!=='granted')return;const soon=items.filter(i=>!i.archiviert&&daysLeft(i)>=0&&daysLeft(i)<=settings.warnDays);if(soon.length){const last=localStorage.getItem('gt_lastnotify'),today=new Date().toDateString();if(force||last!==today){new Notification('Garantie Tresor',{body:soon.length+' Garantie'+(soon.length>1?'n werden':' wird')+' bald fällig.'});localStorage.setItem('gt_lastnotify',today);}}}
+function exportBackup(){const blob=new Blob([JSON.stringify({items,exported:new Date().toISOString()},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='garantie-tresor-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Backup erstellt');}
+async function importBackup(e){const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data.items))throw 0;for(const it of data.items){if(!it.id)it.id=uid();await dbPut(it);}items=await dbAll();renderHome();closeSheet('settingsSheet');toast(data.items.length+' Einträge importiert');}catch(err){toast('Ungültige Backup-Datei');}}
+async function clearAll(){if(!confirm('Wirklich ALLE Garantien und Bilder unwiderruflich löschen?'))return;await dbClear();items=[];renderHome();renderArchive();renderCalendar();closeSheet('settingsSheet');toast('Alle Daten gelöscht');}
+async function loadDemo(){const today=new Date();const mk=(ma,prod,hand,betrag,gar,kat,arch)=>{const d=new Date(today);d.setMonth(d.getMonth()-ma);return{id:uid(),produkt:prod,haendler:hand,kaufdatum:d.toISOString().slice(0,10),betrag,waehrung:'CHF',garantieMonate:gar,kategorie:kat,seriennummer:'',notizen:'',belegBild:null,produktBild:null,archiviert:!!arch,erstelltAm:new Date().toISOString()};};const demo=[mk(1,"Kaffeemaschine De'Longhi","MediaMarkt",699,24,"Haushalt"),mk(23,"iPhone 15 Pro","Digitec",1199,24,"Elektronik"),mk(5,"Bosch Akkuschrauber","Hornbach",149,36,"Werkzeug"),mk(11,"Sonos Beam Soundbar","Fust",549,24,"Elektronik"),mk(30,"Weber Gasgrill","Do it + Garden",899,60,"Haushalt",true)];for(const it of demo)await dbPut(it);items=await dbAll();renderHome();closeSheet('settingsSheet');toast('Beispieldaten geladen');}
+
+/* ============ PWA ICON + MANIFEST ============ */
+function pngFromSvg(s,size){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=size;c.getContext('2d').drawImage(img,0,0,size,size);res(c.toDataURL('image/png'));};img.onerror=rej;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);});}
 function addLink(rel,href,extra){const l=document.createElement('link');l.rel=rel;l.href=href;if(extra)Object.assign(l,extra);document.head.appendChild(l);}
-async function setupPWA(){
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12A3A3"/><stop offset="1" stop-color="#0B7A7A"/></linearGradient></defs><rect width="512" height="512" fill="url(#g)"/><path d="M256 118 L360 156 V270 C360 344 314 386 256 408 C198 386 152 344 152 270 V156 Z" fill="#ffffff" opacity="0.18"/><path d="M256 140 L344 172 V268 C344 330 306 366 256 386 C206 366 168 330 168 268 V172 Z" fill="#ffffff"/><path d="M218 262 l28 28 l58 -64" fill="none" stroke="#0B7A7A" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  try{
-    const png512=await pngFromSvg(svg,512),png192=await pngFromSvg(svg,192),png180=await pngFromSvg(svg,180);
-    const manifest={name:'Garantie Tresor',short_name:'Garantie',description:'Alle Garantien an einem Ort',
-      start_url:'.',scope:'.',display:'standalone',orientation:'portrait',background_color:'#F6F8F8',theme_color:'#0B7A7A',
-      icons:[{src:png192,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:png512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
-    const mUrl=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));
-    addLink('manifest',mUrl);
-    addLink('apple-touch-icon',png180);
-    addLink('icon',png192,{type:'image/png'});
-  }catch(e){console.warn('PWA setup fehlgeschlagen',e);}
-}
+async function setupPWA(){const icon=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#0B7A7A"/><path d="M256 120 L360 158 V272 C360 346 314 388 256 410 C198 388 152 346 152 272 V158 Z" fill="#ffffff" opacity="0.16"/><path d="M256 142 L344 174 V270 C344 332 306 368 256 388 C206 368 168 332 168 270 V174 Z" fill="#ffffff"/><path d="M220 264 l26 26 l58 -62" fill="none" stroke="#0B7A7A" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/></svg>`;try{const p512=await pngFromSvg(icon,512),p192=await pngFromSvg(icon,192),p180=await pngFromSvg(icon,180);const man={name:'Garantie Tresor',short_name:'Garantie',description:'Alle Garantien an einem Ort',start_url:'.',scope:'.',display:'standalone',orientation:'portrait',background_color:'#F4F6F6',theme_color:'#0B7A7A',icons:[{src:p192,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:p512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};addLink('manifest',URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'})));addLink('apple-touch-icon',p180);addLink('icon',p192,{type:'image/png'});}catch(e){console.warn('PWA',e);}}
 
-/* ================= INIT ================= */
+/* ============ INIT ============ */
 (async function init(){
-  loadSettings();
-  setupPWA();
-  await openDB();
-  items=await dbAll();
-  renderHome();
+  paintIcons();
+  $('brandMark').innerHTML=svg('shield');
+  $('btnSettings').innerHTML=svg('settings');
+  $('searchIc').innerHTML=svg('search');
+  $('ct1').innerHTML=svg('chevron','ic-sm');
+  $('calHintIc').innerHTML=svg('calendar','ic-sm');
+  $('arcHintIc').innerHTML=svg('archive','ic-sm');
+  loadSettings();setupPWA();
+  await openDB();items=await dbAll();renderHome();
   setTimeout(()=>checkExpiring(false),1500);
 })();
 </script>
